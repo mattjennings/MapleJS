@@ -1,6 +1,6 @@
-const bcrypt = require('bcrypt')
-const Account = require('../../../../models/Account')
-const { PacketWriter } = require('../../../../util/maplenet')
+import * as bcrypt from 'bcrypt'
+import { PacketWriter } from '../../../../util/maplenet'
+import Account from '../../../../models/Account'
 const serverConfig = require('../../../../../serverConfig')
 
 const getDocumentId = function(document) {
@@ -35,6 +35,7 @@ export default packetHandler => {
             female: null,
             isAdmin: false
           })
+
           await account.save()
         }
       }
