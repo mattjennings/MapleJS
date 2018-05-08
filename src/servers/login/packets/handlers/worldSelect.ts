@@ -1,9 +1,12 @@
-const { PacketWriter } = require('../../../../util/maplenet')
+import { PacketWriter, PacketHandler } from '../../../../util/maplenet'
+
 const serverConfig = require('../../../../../serverConfig')
 
 const getWorldInfoById = function(id) {
-  for (const name in ServerConfig.worlds) {
-    if (serverConfig.worlds[name].id == id) return serverConfig.worlds[name]
+  for (const name in serverConfig.worlds) {
+    if (serverConfig.worlds[name].id === id) {
+      return serverConfig.worlds[name]
+    }
   }
   return null
 }
@@ -57,7 +60,7 @@ const showWorldsPacketHandler = function(client) {
   client.sendPacket(packet)
 }
 
-module.exports = packetHandler => {
+export default (packetHandler: PacketHandler) => {
   packetHandler.setHandler(0x0004, showWorldsPacketHandler)
   packetHandler.setHandler(0x000b, showWorldsPacketHandler)
 
@@ -84,7 +87,9 @@ module.exports = packetHandler => {
       return
     }
 
-    if (reader.readUInt8() !== 2) return
+    if (reader.readUInt8() !== 2) {
+      return
+    }
     const worldId = reader.readUInt8()
     const channelId = reader.readUInt8()
 
@@ -95,15 +100,13 @@ module.exports = packetHandler => {
       packet.writeUInt8(8)
     } else {
       client.state = {
-        worldId: worldId,
-        channelId: channelId
+        worldId,
+        channelId
       }
 
       packet.writeUInt8(0)
 
-      const characters = await client.account.getCharacters(
-        client.state.worldId
-      )
+      const characters = await client.account.getCharacters(client.state.worldId)
       packet.writeUInt8(characters.length)
 
       for (let i = 0; i < characters.length; i++) {

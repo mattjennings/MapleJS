@@ -28,7 +28,7 @@ class PacketWriter {
   private buffer: Buffer
   private writtenData: number
 
-  constructor(opCode) {
+  constructor(opCode?) {
     this.buffer = new Buffer(32)
     this.writtenData = 0
 
@@ -111,7 +111,7 @@ class PacketWriter {
     return this
   }
 
-  public writeString(value, length) {
+  public writeString(value, length?) {
     if (value === null || typeof value === 'undefined') {
       value = ''
     }

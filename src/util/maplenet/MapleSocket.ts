@@ -307,7 +307,7 @@ function rollRight(value, shift) {
   return ret
 }
 
-class Socket {
+class MapleSocket {
   public decryptData(data, sequence) {
     this.transformAES(data, sequence)
 
@@ -476,4 +476,4 @@ class Socket {
   }
 }
 
-export default Socket
+export default new MapleSocket()

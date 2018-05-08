@@ -1,19 +1,30 @@
-const crypto = require('crypto')
-import { PacketHandler } from '../util/maplenet'
-const net = require('net')
-const { socket: mapleSocket, PacketWriter, PacketReader } = require('../util/maplenet')
+import * as crypto from 'crypto'
+import * as net from 'net'
+import { mapleSocket, PacketWriter, PacketReader, PacketHandler } from '../../util/maplenet'
+import Client from './Client'
+
+declare module 'net' {
+  interface Socket {
+    clientSequence: Uint8Array
+    serverSequence: Uint8Array
+    ponged: boolean
+    header: boolean
+    nextBlockLen: number
+    buffer: Buffer
+  }
+}
 
 class MapleServer {
-  private name: string
-  private port: number
-  private version: number
-  private subversion: string
-  private locale: number
-  private packetHandler: PacketHandler
+  public name: string
+  public port: number
+  public version: number
+  public subversion: string
+  public locale: number
+  public packetHandler: PacketHandler
 
-  private connectedClients: any[]
-  private tcpServer: any
-  private pingerId: NodeJS.Timer
+  public connectedClients: any[]
+  public tcpServer: any
+  public pingerId: NodeJS.Timer
 
   constructor(packetHandler: PacketHandler, options) {
     this.name = options.name
@@ -39,7 +50,7 @@ class MapleServer {
 
   public createTcpServer() {
     const mapleServer = this
-    return net.createServer(function(socket) {
+    return net.createServer(socket => {
       console.log('Got connection!')
 
       socket.clientSequence = new Uint8Array(crypto.randomBytes(4))
@@ -49,40 +60,10 @@ class MapleServer {
       socket.nextBlockLen = 4
       socket.buffer = new Buffer(0)
 
-      socket.client = {
-        server: mapleServer,
-        socket
-      }
+      const client = new Client(mapleServer, socket)
+      this.connectedClients.push(socket)
 
-      socket.client.server.connectedClients.push(socket)
-
-      socket.client.sendPacket = function(packet) {
-        let buffer = new Buffer(4)
-        const socket = this.socket
-        mapleSocket.generateHeader(buffer, socket.serverSequence, packet.writtenData, -(mapleServer.version + 1))
-        socket.write(buffer)
-
-        buffer = packet.getBufferCopy()
-        mapleSocket.encryptData(buffer, socket.serverSequence)
-
-        socket.serverSequence = mapleSocket.morphSequence(socket.serverSequence)
-
-        socket.write(buffer)
-      }
-
-      socket.client.disconnect = function(reason) {
-        if (arguments.length !== 0) {
-          console.log('Disconnecting client. Reason: ' + reason)
-        } else {
-          console.log('Disconnecting client.')
-        }
-        const socket = this.socket
-
-        socket.end()
-        socket.destroy()
-      }
-
-      socket.on('data', async function(receivedData) {
+      socket.on('data', async receivedData => {
         socket.pause()
         const temp = socket.buffer
         socket.buffer = Buffer.concat([temp, receivedData])
@@ -109,7 +90,7 @@ class MapleServer {
 
             if (handler) {
               try {
-                await handler(socket.client, reader)
+                await handler(client, reader)
               } catch (exception) {
                 console.error(exception, exception.stack)
               }
@@ -124,12 +105,14 @@ class MapleServer {
         socket.resume()
       })
 
-      socket.on('close', function() {
+      socket.on('close', () => {
         console.log('Connection closed.')
-        socket.client.server.connectedClients.pop(this)
+        const index = mapleServer.connectedClients.indexOf(socket)
+        mapleServer.connectedClients.splice(index, 1)
+        console.log('Connected clients remaining: ' + mapleServer.connectedClients.length)
       })
 
-      socket.on('error', function(error) {
+      socket.on('error', error => {
         console.log('Error?')
         console.log(error)
       })
@@ -193,4 +176,4 @@ class MapleServer {
   }
 }
 
-module.exports = MapleServer
+export default MapleServer

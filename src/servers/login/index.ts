@@ -1,6 +1,6 @@
 import packetHandler from './packets/packetHandler'
 const mongoose = require('mongoose')
-const MapleServer = require('../MapleServer')
+import MapleServer from '../MapleServer'
 const serverConfig = require('../../../serverConfig')
 
 mongoose.connect(serverConfig.databaseConnectionString)
