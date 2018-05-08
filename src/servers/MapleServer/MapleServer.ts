@@ -1,5 +1,6 @@
 import * as crypto from 'crypto'
 import * as net from 'net'
+import { findIndex } from 'lodash'
 import { mapleSocket, PacketWriter, PacketReader, PacketHandler } from '../../util/maplenet'
 import Client from './Client'
 
@@ -22,7 +23,7 @@ class MapleServer {
   public locale: number
   public packetHandler: PacketHandler
 
-  public connectedClients: any[]
+  public connectedClients: Client[]
   public tcpServer: any
   public pingerId: NodeJS.Timer
 
@@ -49,10 +50,7 @@ class MapleServer {
   }
 
   public createTcpServer() {
-    const mapleServer = this
     return net.createServer(socket => {
-      console.log('Got connection!')
-
       socket.clientSequence = new Uint8Array(crypto.randomBytes(4))
       socket.serverSequence = new Uint8Array(crypto.randomBytes(4))
       socket.ponged = true
@@ -60,13 +58,15 @@ class MapleServer {
       socket.nextBlockLen = 4
       socket.buffer = new Buffer(0)
 
-      const client = new Client(mapleServer, socket)
-      this.connectedClients.push(socket)
+      const client = new Client(this, socket)
+      this.connectedClients.push(client)
+
+      console.log('Got connection!')
+      console.log('Connected clients: ' + this.connectedClients.length)
 
       socket.on('data', async receivedData => {
         socket.pause()
-        const temp = socket.buffer
-        socket.buffer = Buffer.concat([temp, receivedData])
+        socket.buffer = Buffer.concat([socket.buffer, receivedData])
 
         while (socket.nextBlockLen <= socket.buffer.length) {
           const data = socket.buffer
@@ -86,7 +86,7 @@ class MapleServer {
 
             const reader = new PacketReader(block)
             const opCode = reader.readUInt16()
-            const handler = mapleServer.packetHandler.getHandler(opCode)
+            const handler = this.packetHandler.getHandler(opCode)
 
             if (handler) {
               try {
@@ -95,7 +95,7 @@ class MapleServer {
                 console.error(exception, exception.stack)
               }
             } else {
-              console.warn('handler not found for 0x' + opCode.toString(16))
+              console.warn('No packet handler for 0x' + opCode.toString(16))
             }
           }
 
@@ -107,24 +107,25 @@ class MapleServer {
 
       socket.on('close', () => {
         console.log('Connection closed.')
-        const index = mapleServer.connectedClients.indexOf(socket)
-        mapleServer.connectedClients.splice(index, 1)
-        console.log('Connected clients remaining: ' + mapleServer.connectedClients.length)
+        const index = findIndex(this.connectedClients, { socket })
+        if (index > -1) {
+          this.connectedClients.splice(index, 1)
+        }
+        console.log('Connected clients remaining: ' + this.connectedClients.length)
       })
 
       socket.on('error', error => {
-        console.log('Error?')
-        console.log(error)
+        console.error('Socket error', error)
       })
 
       // Send handshake
       const packet = new PacketWriter()
-      packet.writeUInt16(2 + 2 + mapleServer.subversion.length + 4 + 4 + 1)
-      packet.writeUInt16(mapleServer.version)
-      packet.writeString(mapleServer.subversion)
+      packet.writeUInt16(2 + 2 + this.subversion.length + 4 + 4 + 1)
+      packet.writeUInt16(this.version)
+      packet.writeString(this.subversion)
       packet.writeBytes(socket.clientSequence)
       packet.writeBytes(socket.serverSequence)
-      packet.writeUInt8(mapleServer.locale)
+      packet.writeUInt8(this.locale)
 
       socket.write(packet.getBufferCopy())
     })
@@ -164,14 +165,9 @@ class MapleServer {
       this.tcpServer.close()
       this.tcpServer = null
 
-      const clientsCopy = this.connectedClients.slice()
-      for (let i = 0; i < clientsCopy.length; i++) {
-        try {
-          clientsCopy[i].client.disconnect('Server is closing.')
-        } catch (ex) {
-          console.log(ex)
-        }
-      }
+      this.connectedClients.forEach(client => {
+        client.disconnect('Server is closing.')
+      })
     }
   }
 }
