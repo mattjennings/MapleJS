@@ -1,0 +1,6 @@
+/node_modules
+/datafiles/*.nx
+/docker/data
+.settings
+serverConfig.json
+dist
