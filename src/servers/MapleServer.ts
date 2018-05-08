@@ -1,13 +1,21 @@
 const crypto = require('crypto')
+import { PacketHandler } from '../util/maplenet'
 const net = require('net')
-const {
-  socket: mapleSocket,
-  PacketWriter,
-  PacketReader
-} = require('../util/maplenet')
+const { socket: mapleSocket, PacketWriter, PacketReader } = require('../util/maplenet')
 
 class MapleServer {
-  constructor(packetHandler, options) {
+  private name: string
+  private port: number
+  private version: number
+  private subversion: string
+  private locale: number
+  private packetHandler: PacketHandler
+
+  private connectedClients: any[]
+  private tcpServer: any
+  private pingerId: NodeJS.Timer
+
+  constructor(packetHandler: PacketHandler, options) {
     this.name = options.name
     this.port = options.port
     this.version = options.version
@@ -29,7 +37,7 @@ class MapleServer {
     console.log('Waiting for people on port ' + this.port + '...')
   }
 
-  createTcpServer() {
+  public createTcpServer() {
     const mapleServer = this
     return net.createServer(function(socket) {
       console.log('Got connection!')
@@ -43,7 +51,7 @@ class MapleServer {
 
       socket.client = {
         server: mapleServer,
-        socket: socket
+        socket
       }
 
       socket.client.server.connectedClients.push(socket)
@@ -51,12 +59,7 @@ class MapleServer {
       socket.client.sendPacket = function(packet) {
         let buffer = new Buffer(4)
         const socket = this.socket
-        mapleSocket.generateHeader(
-          buffer,
-          socket.serverSequence,
-          packet.writtenData,
-          -(mapleServer.version + 1)
-        )
+        mapleSocket.generateHeader(buffer, socket.serverSequence, packet.writtenData, -(mapleServer.version + 1))
         socket.write(buffer)
 
         buffer = packet.getBufferCopy()
@@ -98,9 +101,7 @@ class MapleServer {
             socket.nextBlockLen = 4
 
             mapleSocket.decryptData(block, socket.clientSequence)
-            socket.clientSequence = mapleSocket.morphSequence(
-              socket.clientSequence
-            )
+            socket.clientSequence = mapleSocket.morphSequence(socket.clientSequence)
 
             const reader = new PacketReader(block)
             const opCode = reader.readUInt16()
@@ -146,8 +147,10 @@ class MapleServer {
     })
   }
 
-  startPinger() {
-    if (!this.pingerId) return
+  public startPinger() {
+    if (!this.pingerId) {
+      return
+    }
 
     this.pingerId = setInterval(function() {
       const clientsCopy = this.connectedClients.slice()
@@ -169,7 +172,7 @@ class MapleServer {
     }, 15000)
   }
 
-  close() {
+  public close() {
     if (this.pingerId) {
       clearInterval(this.pingerId)
       this.pingerId = null

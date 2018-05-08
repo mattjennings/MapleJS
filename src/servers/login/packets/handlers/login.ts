@@ -7,7 +7,7 @@ const getDocumentId = function(document) {
   return parseInt(String(document._id).substr(0, 8), 16)
 }
 
-module.exports = packetHandler => {
+export default packetHandler => {
   packetHandler.setHandler(0x0001, async (client, reader) => {
     const username = reader.readString()
     let password = reader.readString()
@@ -29,7 +29,7 @@ module.exports = packetHandler => {
           account = new Account({
             name: username,
             password: hash,
-            salt: salt,
+            salt,
             banResetDate: null,
             creationDate: new Date(),
             female: null,

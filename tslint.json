@@ -1,0 +1,34 @@
+{
+  "extends": [
+    "tslint:latest",
+    "tslint-eslint-rules",
+    "tslint-plugin-prettier",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "no-submodule-imports": false,
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "no-implicit-dependencies": false,
+    "no-var-requires": false,
+    "prefer-conditional-expression": false,
+    "no-console": false,
+    "trailing-comma": false,
+    "semicolon": false,
+    "quotemark": false,
+    "interface-name": false,
+    "eofline": false,
+    "no-bitwise": false,
+    "prettier": [
+      true,
+      {
+        "semi": false,
+        "trailingComma": "none",
+        "tabWidth": 2,
+        "printWidth": 120,
+        "singleQuote": true,
+        "parser": "typescript"
+      }
+    ]
+  }
+}
