@@ -1,6 +1,6 @@
 /node_modules
 /datafiles/*.nx
-/docker/data
+/docker
 .settings
 serverConfig.json
 dist
