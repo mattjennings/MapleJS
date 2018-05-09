@@ -1,4 +1,4 @@
-import Item, { ItemSchema } from './Item'
+import ItemModel, { Item } from './Item'
 
-export { ItemSchema }
-export default Item
+export { Item }
+export default ItemModel

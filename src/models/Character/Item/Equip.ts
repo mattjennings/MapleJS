@@ -1,9 +1,9 @@
 import * as mongoose from 'mongoose'
 import { prop, Typegoose, ModelType, InstanceType, Ref, instanceMethod } from 'typegoose'
-import { ItemSchema } from './Item'
+import { Item } from './Item'
 import { PacketWriter } from '@util/maplenet'
 
-export class EquipSchema extends ItemSchema implements ItemSchema {
+export class Equip extends Item implements Item {
   @prop() public type: number = 1
   @prop() public slots: number
   @prop() public scrolls: number
@@ -29,7 +29,7 @@ export class EquipSchema extends ItemSchema implements ItemSchema {
   @prop() public hammers: number
 
   @instanceMethod
-  public writeItemPacketData(this: InstanceType<ItemSchema>, writer: PacketWriter) {
+  public writeItemPacketData(this: InstanceType<Item>, writer: PacketWriter) {
     const type = 1
     writer.writeUInt8(type)
     writer.writeUInt32(this.itemId)
@@ -42,7 +42,7 @@ export class EquipSchema extends ItemSchema implements ItemSchema {
     }
     writer.writeDate(this.expires)
 
-    const item = this as InstanceType<EquipSchema>
+    const item = this as InstanceType<Equip>
     writer.writeUInt8(item.slots)
     writer.writeUInt8(item.scrolls)
     writer.writeUInt16(item.incStr)
@@ -80,4 +80,4 @@ export class EquipSchema extends ItemSchema implements ItemSchema {
   }
 }
 
-export default new EquipSchema().getModelForClass(EquipSchema)
+export default new Equip().getModelForClass(Equip)

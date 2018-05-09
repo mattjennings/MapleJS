@@ -1,11 +1,11 @@
-import { RechargeableSchema } from '@models/Character/Item/Rechargeable'
+import { Rechargeable } from '@models/Character/Item/Rechargeable'
 import { PacketWriter } from '@util/maplenet'
 import { InstanceType, Ref, Typegoose, instanceMethod, prop } from 'typegoose'
-import { CharacterSchema } from '../Character'
+import { Character } from '../Character'
 
-export class ItemSchema extends Typegoose {
-  @prop({ ref: CharacterSchema })
-  public character: Ref<CharacterSchema>
+export class Item extends Typegoose {
+  @prop({ ref: Character })
+  public character: Ref<Character>
 
   @prop() public type: number
   @prop() public itemId: number
@@ -15,7 +15,7 @@ export class ItemSchema extends Typegoose {
   @prop() public expires: Date
 
   @instanceMethod
-  public writeItemPacketData(this: InstanceType<ItemSchema>, writer: PacketWriter) {
+  public writeItemPacketData(this: InstanceType<Item>, writer: PacketWriter) {
     const type = 2
     writer.writeUInt8(type)
     writer.writeUInt32(this.itemId)
@@ -30,4 +30,4 @@ export class ItemSchema extends Typegoose {
   }
 }
 
-export default new ItemSchema().getModelForClass(ItemSchema)
+export default new Item().getModelForClass(Item)

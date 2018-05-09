@@ -89,6 +89,7 @@ class MapleServer {
             const handler = this.packetHandler.getHandler(opCode)
 
             if (handler) {
+              console.warn('Processing handler for packet 0x' + opCode.toString(16))
               try {
                 await handler(client, reader)
               } catch (exception) {

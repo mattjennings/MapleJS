@@ -1,14 +1,14 @@
 import * as net from 'net'
 import MapleServer from './MapleServer'
 import { mapleSocket } from '@util/maplenet'
-import { AccountSchema } from '@models/Account'
+import { Account } from '@models/Account'
 import { InstanceType } from 'typegoose'
 
 class Client {
   public server: MapleServer
   public socket: net.Socket
 
-  public account?: InstanceType<AccountSchema>
+  public account?: InstanceType<Account>
   public state?: {
     worldId: number
     channelId: number

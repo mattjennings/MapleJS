@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose'
 import { prop, instanceMethod, Typegoose, ModelType, InstanceType } from 'typegoose'
 import Character from './Character'
 
-export class AccountSchema extends Typegoose {
+export class Account extends Typegoose {
   @prop() public name?: string
 
   @prop() public password: string
@@ -27,9 +27,9 @@ export class AccountSchema extends Typegoose {
   @prop() public loggedIn: boolean
 
   @instanceMethod
-  public getCharacters(this: InstanceType<AccountSchema>, worldId: number) {
+  public getCharacters(this: InstanceType<Account>, worldId: number) {
     return Character.find({ account: this, worldId })
   }
 }
 
-export default new AccountSchema().getModelForClass(AccountSchema)
+export default new Account().getModelForClass(Account)

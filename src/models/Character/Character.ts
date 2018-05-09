@@ -1,15 +1,15 @@
 import * as mongoose from 'mongoose'
 import { prop, Typegoose, ModelType, InstanceType, Ref, instanceMethod } from 'typegoose'
-import { AccountSchema } from '@models/Account'
-import { InventorySchema } from './Inventory'
-import { StatsSchema } from './Stats'
+import { Account } from '@models/Account'
+import { Inventory } from './Inventory'
+import { Stats } from './Stats'
 import { PacketWriter } from '@util/maplenet'
 import { getDocumentId } from '@util/mongoose'
-import Item, { ItemSchema } from './Item'
+import ItemModel, { Item } from './Item'
 
-export class CharacterSchema extends Typegoose {
-  @prop({ ref: AccountSchema })
-  public account: Ref<AccountSchema>
+export class Character extends Typegoose {
+  @prop({ ref: Account })
+  public account: Ref<Account>
 
   @prop() public name: string
   @prop() public worldId: number
@@ -21,55 +21,20 @@ export class CharacterSchema extends Typegoose {
   @prop() public mapId: number
   @prop() public mapPos: number
 
-  @prop() public stats: StatsSchema
-  @prop() public inventory: InventorySchema
+  @prop() public stats: Stats
+  @prop() public inventory: Inventory
 
   @instanceMethod
-  public addStats(this: InstanceType<CharacterSchema>, writer: PacketWriter) {
-    writer.writeUInt32(getDocumentId(this))
-    writer.writeString(this.name, 13)
-    writer.writeUInt8(this.female)
-    writer.writeUInt8(this.skin)
-    writer.writeUInt32(this.eyes)
-    writer.writeUInt32(this.hair)
-
-    writer.writeUInt64(0)
-    writer.writeUInt64(0)
-    writer.writeUInt64(0)
-
-    writer.writeUInt8(this.stats.level)
-    writer.writeUInt16(this.stats.job)
-    writer.writeUInt16(this.stats.str)
-    writer.writeUInt16(this.stats.dex)
-    writer.writeUInt16(this.stats.int)
-    writer.writeUInt16(this.stats.luk)
-    writer.writeUInt16(this.stats.hp)
-    writer.writeUInt16(this.stats.maxHp)
-    writer.writeUInt16(this.stats.mp)
-    writer.writeUInt16(this.stats.maxMp)
-    writer.writeUInt16(this.stats.ap) // Byte if evan?
-    writer.writeUInt16(this.stats.sp)
-    writer.writeUInt32(this.stats.exp)
-    writer.writeUInt16(this.stats.fame)
-    writer.writeUInt32(0) // Gachapon EXP
-
-    writer.writeUInt32(this.mapId)
-    writer.writeUInt8(this.mapPos)
-
-    writer.writeUInt32(0) // Unk
-  }
-
-  @instanceMethod
-  public async getInventory(this: InstanceType<CharacterSchema>, inventoryIndex: number) {
-    return Item.find({
+  public async getInventory(this: InstanceType<Character>, inventoryIndex: number) {
+    return ItemModel.find({
       character: this,
       inventory: inventoryIndex
     })
   }
 
   @instanceMethod
-  public async getItem(this: InstanceType<CharacterSchema>, inventoryIndex: number, slot: number) {
-    return Item.findOne({
+  public async getItem(this: InstanceType<Character>, inventoryIndex: number, slot: number) {
+    return ItemModel.findOne({
       character: this,
       inventory: inventoryIndex,
       slot
@@ -77,7 +42,7 @@ export class CharacterSchema extends Typegoose {
   }
 
   @instanceMethod
-  public async setItem(this: InstanceType<CharacterSchema>, item: InstanceType<ItemSchema>) {
+  public async setItem(this: InstanceType<Character>, item: InstanceType<Item>) {
     const tmp = await this.getItem(item.inventory, item.slot)
     if (tmp) {
       tmp.remove()
@@ -88,7 +53,7 @@ export class CharacterSchema extends Typegoose {
 
   // Packet methods
   @instanceMethod
-  public async addAvatar(this: InstanceType<CharacterSchema>, writer: PacketWriter) {
+  public async addAvatar(this: InstanceType<Character>, writer: PacketWriter) {
     let index
 
     // Prepare slots...
@@ -144,6 +109,42 @@ export class CharacterSchema extends Typegoose {
     writer.writeUInt32(0)
     writer.writeUInt32(0)
   }
+
+  @instanceMethod
+  public addStats(this: InstanceType<Character>, writer: PacketWriter) {
+    const docId = getDocumentId(this)
+    writer.writeUInt32(docId)
+    writer.writeString(this.name, 13)
+    writer.writeUInt8(this.female)
+    writer.writeUInt8(this.skin)
+    writer.writeUInt32(this.eyes)
+    writer.writeUInt32(this.hair)
+
+    writer.writeUInt64(0)
+    writer.writeUInt64(0)
+    writer.writeUInt64(0)
+
+    writer.writeUInt8(this.stats.level)
+    writer.writeUInt16(this.stats.job)
+    writer.writeUInt16(this.stats.str)
+    writer.writeUInt16(this.stats.dex)
+    writer.writeUInt16(this.stats.int)
+    writer.writeUInt16(this.stats.luk)
+    writer.writeUInt16(this.stats.hp)
+    writer.writeUInt16(this.stats.maxHp)
+    writer.writeUInt16(this.stats.mp)
+    writer.writeUInt16(this.stats.maxMp)
+    writer.writeUInt16(this.stats.ap) // Byte if evan?
+    writer.writeUInt16(this.stats.sp)
+    writer.writeUInt32(this.stats.exp)
+    writer.writeUInt16(this.stats.fame)
+    writer.writeUInt32(0) // Gachapon EXP
+
+    writer.writeUInt32(this.mapId)
+    writer.writeUInt8(this.mapPos)
+
+    writer.writeUInt32(0) // Unk
+  }
 }
 
-export default new CharacterSchema().getModelForClass(CharacterSchema)
+export default new Character().getModelForClass(Character)

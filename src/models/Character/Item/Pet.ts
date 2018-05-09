@@ -1,8 +1,8 @@
 import * as mongoose from 'mongoose'
 import { prop, Typegoose, ModelType, InstanceType, Ref, instanceMethod } from 'typegoose'
-import { ItemSchema } from './Item'
+import { Item } from './Item'
 
-export class PetSchema extends ItemSchema implements ItemSchema {
+export class Pet extends Item implements Item {
   @prop() public type: number = 3
   @prop() public name: string
   @prop() public closeness: number
@@ -10,4 +10,4 @@ export class PetSchema extends ItemSchema implements ItemSchema {
   @prop() public level: number
 }
 
-export default new PetSchema().getModelForClass(PetSchema)
+export default new Pet().getModelForClass(Pet)

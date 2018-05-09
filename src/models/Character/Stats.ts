@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose'
 import { prop, Typegoose, ModelType, InstanceType, Ref } from 'typegoose'
 
-export class StatsSchema extends Typegoose {
+export class Stats extends Typegoose {
   @prop() public level: number
   @prop() public job: number
   @prop() public str: number
@@ -20,4 +20,4 @@ export class StatsSchema extends Typegoose {
   @prop() public fame: number
 }
 
-export default new StatsSchema().getModelForClass(StatsSchema)
+export default new Stats().getModelForClass(Stats)

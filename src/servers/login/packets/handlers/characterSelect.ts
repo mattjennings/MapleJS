@@ -56,6 +56,21 @@ function checkItemValidity(job, female, element, objectId) {
   return valid
 }
 
+async function createItem(character, pItemId, pSlot, pInventory) {
+  let item
+  if (pInventory === 1) {
+    item = new Equip()
+  } else {
+    item = new Rechargeable()
+    item.amount = 1
+  }
+  item.character = character
+  item.inventory = pInventory
+  item.slot = pSlot
+  item.itemId = pItemId
+  await item.save()
+}
+
 function EnterChannel(client, pCharacterId) {
   const world = getWorldInfoById(client.state.worldId)
 
@@ -257,41 +272,25 @@ export default (packetHandler: PacketHandler) => {
     await character.save()
 
     // Create items
-
-    async function createItem(pItemId, pSlot, pInventory) {
-      let item
-      if (pInventory === 1) {
-        item = new Equip()
-      } else {
-        item = new Rechargeable()
-        item.amount = 1
-      }
-      item.character = character
-      item.inventory = pInventory
-      item.slot = pSlot
-      item.itemId = pItemId
-      await item.save()
-    }
-
     if (top !== 0) {
-      await createItem(top, -5, 1)
+      await createItem(character, top, -5, 1)
     }
     if (bottom !== 0) {
-      await createItem(bottom, -6, 1)
+      await createItem(character, bottom, -6, 1)
     }
     if (shoes !== 0) {
-      await createItem(shoes, -7, 1)
+      await createItem(character, shoes, -7, 1)
     }
     if (weapon !== 0) {
-      await createItem(weapon, -11, 1)
+      await createItem(character, weapon, -11, 1)
     }
-    await createItem(4161001, 1, 2)
+    await createItem(character, 4161001, 1, 2)
 
     const packet = new PacketWriter(0x000e)
     packet.writeUInt8(0)
 
-    character.addStats(packet)
-    character.addAvatar(packet)
+    await character.addStats(packet)
+    await character.addAvatar(packet)
     packet.writeUInt8(0) // ?
     packet.writeUInt8(false) // No rankings
 
