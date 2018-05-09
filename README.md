@@ -47,8 +47,6 @@ TODO
 ========
 
 # Progress
-- World selection
-- Character selection
-- Character creation
+- item/equip/etc polymorphism & discriminators in mongoose with typegoose
 - PIC?
 - Mob spawn

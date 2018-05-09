@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose'
+import { ObjectID } from 'mongodb'
 import { prop, Typegoose, ModelType, InstanceType, Ref, instanceMethod } from 'typegoose'
 import { Account } from '@models/Account'
 import { Inventory } from './Inventory'
@@ -8,9 +9,7 @@ import { getDocumentId } from '@util/mongoose'
 import ItemModel, { Item } from './Item'
 
 export class Character extends Typegoose {
-  @prop({ ref: Account })
-  public account: Ref<Account>
-
+  @prop() public account: ObjectID
   @prop() public name: string
   @prop() public worldId: number
   @prop() public female: boolean

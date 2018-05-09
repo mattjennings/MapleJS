@@ -239,7 +239,7 @@ export default (packetHandler: PacketHandler) => {
     }
 
     const character = new Character({
-      account: client.account,
+      account: client.account._id,
       worldId: client.state.worldId,
       name,
       eyes,
