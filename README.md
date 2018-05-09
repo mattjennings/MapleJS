@@ -14,7 +14,7 @@ Install dependencies
 yarn
 ```
 
-Create a `datafiles` folder and put in the following files:
+Create a `nx` folder and put in the following files:
 
 ```
 Character.nx

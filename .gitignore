@@ -1,5 +1,5 @@
 /node_modules
-/datafiles/*.nx
+*.nx
 /docker
 .settings
 serverConfig.json

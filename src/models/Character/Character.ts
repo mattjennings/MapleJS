@@ -11,7 +11,7 @@ export class CharacterSchema extends Typegoose {
   @prop({ ref: AccountSchema })
   public account: Ref<AccountSchema>
 
-  @prop() public name: number
+  @prop() public name: string
   @prop() public worldId: number
   @prop() public female: boolean
   @prop() public skin: number

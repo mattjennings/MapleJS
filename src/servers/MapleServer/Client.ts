@@ -33,7 +33,7 @@ class Client {
     socket.write(buffer)
   }
 
-  public disconnect(reason) {
+  public disconnect(reason?: string) {
     if (reason) {
       console.log('Disconnecting client. Reason: ' + reason)
     } else {
