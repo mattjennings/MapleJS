@@ -57,7 +57,7 @@ class PacketReader {
     return ret
   }
 
-  public readString(pLength) {
+  public readString(pLength?) {
     pLength = pLength || this.readUInt16()
     let ret = ''
     for (; pLength > 0; pLength--) {

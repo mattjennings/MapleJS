@@ -1,7 +1,7 @@
 import * as crypto from 'crypto'
 import * as net from 'net'
 import { findIndex } from 'lodash'
-import { mapleSocket, PacketWriter, PacketReader, PacketHandler } from '../../util/maplenet'
+import { mapleSocket, PacketWriter, PacketReader, PacketHandler } from '@util/maplenet'
 import Client from './Client'
 
 declare module 'net' {

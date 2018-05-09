@@ -1,10 +1,18 @@
-import MapleServer from './MapleServer'
 import * as net from 'net'
-import { mapleSocket } from '../../util/maplenet'
+import MapleServer from './MapleServer'
+import { mapleSocket } from '@util/maplenet'
+import { AccountSchema } from '@models/Account'
+import { InstanceType } from 'typegoose'
 
 class Client {
   public server: MapleServer
   public socket: net.Socket
+
+  public account?: InstanceType<AccountSchema>
+  public state?: {
+    worldId: number
+    channelId: number
+  }
 
   constructor(server: MapleServer, socket: net.Socket) {
     this.server = server

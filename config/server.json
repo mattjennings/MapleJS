@@ -1,0 +1,28 @@
+{
+	"version": 83,
+	"subversion": "1",
+	"locale": 8,
+	"enableAutoregister": true,
+	"databaseConnectionString": "mongodb://localhost/maplejs",
+	"loginservers": [
+		{
+			"privateIP": "127.0.0.1",
+			"publicIP": "192.168.0.137",
+			"port": 8484
+		}
+	],
+	"worlds": {
+		"Scania": {
+			"privateIP": "127.0.0.1",
+			"publicIP": "192.168.0.137",
+			"portStart": 8500,
+			"id": 0,
+			"ribbon": 2,
+			"channels": 1,
+			"eventMessage": "",
+			"dialogs": [
+			],
+			"characterCreationDisabled": false
+		}
+	}
+}

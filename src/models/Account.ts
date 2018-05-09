@@ -1,7 +1,8 @@
 import * as mongoose from 'mongoose'
-import { prop, Typegoose, ModelType, InstanceType } from 'typegoose'
+import { prop, instanceMethod, Typegoose, ModelType, InstanceType } from 'typegoose'
+import Character from './Character'
 
-class Account extends Typegoose {
+export class AccountSchema extends Typegoose {
   @prop() public name?: string
 
   @prop() public password: string
@@ -24,10 +25,11 @@ class Account extends Typegoose {
   @prop() public isAdmin: boolean
 
   @prop() public loggedIn: boolean
+
+  @instanceMethod
+  public getCharacters(this: InstanceType<AccountSchema>, worldId: number) {
+    return Character.find({ account: this, worldId })
+  }
 }
 
-// accountSchema.methods.getCharacters = function(pWorldId) {
-//   return Character.find({ account: this, worldId: pWorldId })
-// }
-
-export default new Account().getModelForClass(Account)
+export default new AccountSchema().getModelForClass(AccountSchema)

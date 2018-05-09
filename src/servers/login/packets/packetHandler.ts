@@ -1,4 +1,4 @@
-import { PacketHandler } from '../../../util/maplenet'
+import { PacketHandler } from '@util/maplenet'
 
 const packetHandler = new PacketHandler()
 

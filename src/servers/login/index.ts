@@ -1,7 +1,7 @@
 import packetHandler from './packets/packetHandler'
 import MapleServer from '../MapleServer'
 const mongoose = require('mongoose')
-const serverConfig = require('../../../serverConfig')
+const serverConfig = require('@config/server')
 
 mongoose.connect(serverConfig.databaseConnectionString)
 
@@ -14,7 +14,7 @@ const server = new MapleServer(packetHandler, {
 })
 server.startPinger()
 
-process.on('SIGINT', function() {
+process.on('SIGINT', () => {
   server.close()
   console.log('TERMINATE')
   process.exit()

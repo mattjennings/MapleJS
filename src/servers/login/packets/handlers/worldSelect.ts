@@ -1,8 +1,8 @@
-import { PacketWriter, PacketHandler } from '../../../../util/maplenet'
+import { PacketWriter, PacketHandler } from '@util/maplenet'
 
-const serverConfig = require('../../../../../serverConfig')
+const serverConfig = require('@config/server')
 
-const getWorldInfoById = function(id) {
+const getWorldInfoById = id => {
   for (const name in serverConfig.worlds) {
     if (serverConfig.worlds[name].id === id) {
       return serverConfig.worlds[name]
@@ -11,9 +11,8 @@ const getWorldInfoById = function(id) {
   return null
 }
 
-const showWorldsPacketHandler = function(client) {
-  // Request worlds
-
+// Request worlds
+const showWorldsPacketHandler = client => {
   if (!client.account) {
     client.disconnect('Trying to view worlds while not loggedin')
     return
@@ -22,36 +21,38 @@ const showWorldsPacketHandler = function(client) {
   let packet
 
   for (const worldName in serverConfig.worlds) {
-    const world = serverConfig.worlds[worldName]
-    packet = new PacketWriter(0x000a)
+    if (worldName) {
+      const world = serverConfig.worlds[worldName]
+      packet = new PacketWriter(0x000a)
 
-    packet.writeUInt8(world.id)
-    packet.writeString(worldName)
-    packet.writeUInt8(world.ribbon)
-    packet.writeString(world.eventMessage)
-    packet.writeUInt16(100) // EXP Rate
-    packet.writeUInt16(100) // DROP Rate
-    packet.writeUInt8(world.characterCreationDisabled)
-
-    const channels = world.channels
-    packet.writeUInt8(channels)
-    let i
-    for (i = 1; i <= channels; i++) {
-      packet.writeString(worldName + '-' + i)
-      packet.writeUInt32(13132) // Online players
       packet.writeUInt8(world.id)
-      packet.writeUInt8(i - 1)
-      packet.writeUInt8(0)
-    }
+      packet.writeString(worldName)
+      packet.writeUInt8(world.ribbon)
+      packet.writeString(world.eventMessage)
+      packet.writeUInt16(100) // EXP Rate
+      packet.writeUInt16(100) // DROP Rate
+      packet.writeUInt8(world.characterCreationDisabled)
 
-    packet.writeUInt16(world.dialogs.length)
-    for (i = 0; i < world.dialogs.length; i++) {
-      const dialog = world.dialogs[i]
-      packet.writeUInt16(dialog.x)
-      packet.writeUInt16(dialog.y)
-      packet.writeString(dialog.text)
+      const channels = world.channels
+      packet.writeUInt8(channels)
+      let i
+      for (i = 1; i <= channels; i++) {
+        packet.writeString(worldName + '-' + i)
+        packet.writeUInt32(13132) // Online players
+        packet.writeUInt8(world.id)
+        packet.writeUInt8(i - 1)
+        packet.writeUInt8(0)
+      }
+
+      packet.writeUInt16(world.dialogs.length)
+      for (i = 0; i < world.dialogs.length; i++) {
+        const dialog = world.dialogs[i]
+        packet.writeUInt16(dialog.x)
+        packet.writeUInt16(dialog.y)
+        packet.writeString(dialog.text)
+      }
+      client.sendPacket(packet)
     }
-    client.sendPacket(packet)
   }
 
   packet = new PacketWriter(0x000a)
@@ -64,7 +65,7 @@ export default (packetHandler: PacketHandler) => {
   packetHandler.setHandler(0x0004, showWorldsPacketHandler)
   packetHandler.setHandler(0x000b, showWorldsPacketHandler)
 
-  packetHandler.setHandler(0x0006, function(client) {
+  packetHandler.setHandler(0x0006, client => {
     // Request world state
 
     if (!client.account) {
@@ -79,7 +80,7 @@ export default (packetHandler: PacketHandler) => {
     client.sendPacket(packet)
   })
 
-  packetHandler.setHandler(0x0005, async function(client, reader) {
+  packetHandler.setHandler(0x0005, async (client, reader) => {
     // Select channel
 
     if (!client.account) {

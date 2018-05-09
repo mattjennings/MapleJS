@@ -1,13 +1,11 @@
 import * as bcrypt from 'bcrypt'
-import { PacketWriter } from '../../../../util/maplenet'
-import Account from '../../../../models/Account'
-const serverConfig = require('../../../../../serverConfig')
+import { PacketWriter, PacketHandler } from '@util/maplenet'
+import Account from '@models/Account'
+import { getDocumentId } from '@util/mongoose'
 
-const getDocumentId = function(document) {
-  return parseInt(String(document._id).substr(0, 8), 16)
-}
+const serverConfig = require('@config/server')
 
-export default packetHandler => {
+export default (packetHandler: PacketHandler) => {
   packetHandler.setHandler(0x0001, async (client, reader) => {
     const username = reader.readString()
     let password = reader.readString()

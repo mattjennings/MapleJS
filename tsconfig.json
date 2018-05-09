@@ -5,12 +5,24 @@
     "module": "commonjs",
     "lib": ["es2015", "esnext"],
     "outDir": "dist",
+    "baseUrl": ".",
     "sourceMap": true,
+    "paths": {
+      "@util/*": [
+        "src/util/*"
+      ],
+      "@models/*": [
+        "src/models/*"
+      ],
+      "@config/*": [
+        "config/*"
+      ]
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "typeRoots": [
       "node_modules/@types"
-    ],
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    ]
   },
   "include": [
     "src/**/*.ts"
