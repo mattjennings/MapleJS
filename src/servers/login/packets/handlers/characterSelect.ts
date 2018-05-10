@@ -1,10 +1,11 @@
 import { PacketWriter, PacketHandler } from '@util/maplenet'
 import nxFiles from '@nxFiles'
-import Character from '@models/Character'
+import CharacterModel, { Character } from '@models/Character'
 import Equip from '@models/Character/Item/Equip'
 import Rechargeable from '@models/Character/Item/Rechargeable'
 import { findDocumentByCutoffId } from '@util/mongoose'
 import { getWorldInfoById, ipStringToBytes } from '@util/helpers'
+import { InstanceType } from 'typegoose'
 const serverConfig = require('@config/server')
 
 async function isNameValid(name, admin) {
@@ -22,7 +23,7 @@ async function isNameValid(name, admin) {
     }
   }
 
-  const count = await Character.count({ name })
+  const count = await CharacterModel.count({ name })
   return count === 0
 }
 
@@ -56,7 +57,7 @@ function checkItemValidity(job, female, element, objectId) {
   return valid
 }
 
-async function createItem(character, pItemId, pSlot, pInventory) {
+async function createItem(character: InstanceType<Character>, pItemId, pSlot, pInventory) {
   let item
   if (pInventory === 1) {
     item = new Equip()
@@ -64,7 +65,7 @@ async function createItem(character, pItemId, pSlot, pInventory) {
     item = new Rechargeable()
     item.amount = 1
   }
-  item.character = character
+  item.character = character._id
   item.inventory = pInventory
   item.slot = pSlot
   item.itemId = pItemId
@@ -119,7 +120,7 @@ export default (packetHandler: PacketHandler) => {
     const pic = reader.readString()
 
     const id = reader.readUInt32()
-    const character = await findDocumentByCutoffId(Character, id, {
+    const character = await findDocumentByCutoffId(CharacterModel, id, {
       worldId: client.state.worldId
     })
 
@@ -238,7 +239,7 @@ export default (packetHandler: PacketHandler) => {
       return ItemError('weapon')
     }
 
-    const character = new Character({
+    const character = new CharacterModel({
       account: client.account._id,
       worldId: client.state.worldId,
       name,

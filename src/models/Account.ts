@@ -28,7 +28,7 @@ export class Account extends Typegoose {
 
   @instanceMethod
   public getCharacters(this: InstanceType<Account>, worldId: number) {
-    return Character.find({ account: this, worldId })
+    return Character.find({ account: this._id, worldId })
   }
 }
 

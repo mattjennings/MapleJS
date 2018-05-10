@@ -9,7 +9,8 @@ import { getDocumentId } from '@util/mongoose'
 import ItemModel, { Item } from './Item'
 
 export class Character extends Typegoose {
-  @prop() public account: ObjectID
+  @prop({ ref: Account })
+  public account: Ref<Account>
   @prop() public name: string
   @prop() public worldId: number
   @prop() public female: boolean
@@ -26,7 +27,7 @@ export class Character extends Typegoose {
   @instanceMethod
   public async getInventory(this: InstanceType<Character>, inventoryIndex: number) {
     return ItemModel.find({
-      character: this,
+      character: this._id,
       inventory: inventoryIndex
     })
   }
@@ -34,7 +35,7 @@ export class Character extends Typegoose {
   @instanceMethod
   public async getItem(this: InstanceType<Character>, inventoryIndex: number, slot: number) {
     return ItemModel.findOne({
-      character: this,
+      character: this._id,
       inventory: inventoryIndex,
       slot
     })

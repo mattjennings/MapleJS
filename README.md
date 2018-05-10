@@ -47,6 +47,6 @@ TODO
 ========
 
 # Progress
-- item/equip/etc polymorphism & discriminators in mongoose with typegoose
+- world server
 - PIC?
 - Mob spawn

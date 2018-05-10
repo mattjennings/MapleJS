@@ -1,7 +1,8 @@
-import { Rechargeable } from '@models/Character/Item/Rechargeable'
-import { PacketWriter } from '@util/maplenet'
+import { ObjectID } from 'mongodb'
 import { InstanceType, Ref, Typegoose, instanceMethod, prop } from 'typegoose'
-import { Character } from '../Character'
+import { Rechargeable } from '@models/Character/Item/Rechargeable'
+import { Character } from '@models/Character'
+import { PacketWriter } from '@util/maplenet'
 
 export class Item extends Typegoose {
   @prop({ ref: Character })
@@ -30,4 +31,6 @@ export class Item extends Typegoose {
   }
 }
 
-export default new Item().getModelForClass(Item)
+export default new Item().getModelForClass(Item, {
+  schemaOptions: { collection: 'items', discriminatorKey: '_type' }
+})

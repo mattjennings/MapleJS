@@ -10,4 +10,6 @@ export class Pet extends Item implements Item {
   @prop() public level: number
 }
 
-export default new Pet().getModelForClass(Pet)
+export default new Pet().getModelForClass(Pet, {
+  schemaOptions: { collection: 'items', discriminatorKey: '_type' }
+})

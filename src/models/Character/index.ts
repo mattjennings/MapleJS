@@ -1,2 +1,3 @@
-import Character from './Character'
-export default Character
+import CharacterModel, { Character } from './Character'
+export { Character }
+export default CharacterModel
