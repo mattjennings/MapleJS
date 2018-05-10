@@ -1,20 +1,17 @@
 MapleJS
 ========
+MapleStory v83 private server based on [diamondo25's Maple.js](https://github.com/diamondo25/Maple.js). It's in the process of being rewritten in Typescript so it doesn't have all the features that Maple.js has yet.
 
-MapleStory v83 private server based on diamondo25's Maple.js
 
-Installing
+Getting Started
 ========
-
-Edit `serverConfig.json` to your needs. Note the `publicIP` values; this IP is sent to the client on selecting character/changing channel
-
 Install dependencies
 
 ```
 yarn
 ```
 
-Create a `nx` folder and put in the following files:
+Create a `nx` folder and put in the following files (you must obtain these yourself):
 
 ```
 Character.nx
@@ -26,27 +23,24 @@ Reactor.nx
 Skill.nx
 String.nx
 ```
-(you must create them yourself by converting Maplestory v83's .wz files into .nx files)
 
-Start mongodb server on port 27017 or start one with the docker container
+Copy `config/server.sample.json` and rename it to `config/server.json`. Modify it as you see fit.
 
-```
-yarn db
-```
+Start a mongodb server and make sure the connection string in `config/server.json` is correct (if you prefer docker, there is a docker-compose.yml file you can use)
 
 Start the server
 
 ```
-yarn dev
+yarn start
 ```
 
-The server should be ready to use now.
-
+FEATURES
+========
+- Login
+- Character creation
+- Character deletion
+- PIC creation
 
 TODO
 ========
-
-# Progress
-- world server
-- PIC?
-- Mob spawn
+- Channel server
