@@ -1,7 +1,6 @@
 import Account from '@models/Account'
 import { ReceiveOpcode } from '@packets'
 import { PacketWriter, PacketHandler } from '@util/maplenet'
-import { getDocumentId } from '@util/mongoose'
 import * as bcrypt from 'bcrypt'
 
 const serverConfig = require('@config/server')
