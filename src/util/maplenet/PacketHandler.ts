@@ -1,25 +1,23 @@
 import Client from '../../servers/MapleServer/Client'
 import { PacketReader } from '@util/maplenet'
-import { getOpcodeName, Opcode } from '@packets'
+import { Opcode } from '@packets'
+import { getOpcodeName, ReceiveOpcode } from '@packets'
 
 class PacketHandler {
-  private handlers = {}
+  public opcode: Opcode
+  public callback: (client: Client, reader: PacketReader) => void
 
-  public getHandler(opCode) {
-    return this.handlers[opCode] || null
+  constructor(opcode: Opcode, callback: (client: Client, reader: PacketReader) => void) {
+    this.opcode = opcode
+    this.callback = callback
   }
 
-  public setHandler(opCode: Opcode, callback: (client: Client, reader: PacketReader) => void) {
-    this.handlers[opCode] = callback
-    console.log(
-      `Registered handler for 0x${opCode.toString(16)} (${getOpcodeName(
-        opCode
-      )}). Total loaded: ${this.getHandlerCount()}`
-    )
+  public getName() {
+    return getOpcodeName(this.opcode)
   }
 
-  public getHandlerCount() {
-    return Object.keys(this.handlers).length
+  public getOpcodeString() {
+    return `0x${this.opcode.toString(16)}`
   }
 }
 

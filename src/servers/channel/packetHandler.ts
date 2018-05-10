@@ -1,6 +1,6 @@
-import { PacketHandler } from '@util/maplenet'
+import { PacketHandlerManager } from '@util/maplenet'
 
-const packetHandler = new PacketHandler()
+const packetHandler = new PacketHandlerManager()
 
 // require('./handlers/login').default(packetHandler)
 // require('./handlers/worldSelect').default(packetHandler)

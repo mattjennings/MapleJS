@@ -15,6 +15,7 @@
 		"lodash": "^4.17.10",
 		"mongoose": "^5.0.17",
 		"reflect-metadata": "^0.1.12",
+		"require-context": "^1.1.0",
 		"typegoose": "^5.1.0",
 		"typescript": "^2.8.3"
 	},

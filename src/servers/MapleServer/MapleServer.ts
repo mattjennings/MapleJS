@@ -1,9 +1,9 @@
 import * as crypto from 'crypto'
 import * as net from 'net'
 import { findIndex } from 'lodash'
-import { mapleSocket, PacketWriter, PacketReader, PacketHandler } from '@util/maplenet'
+import { mapleSocket, PacketWriter, PacketReader, PacketHandlerManager, PacketHandler } from '@util/maplenet'
 import Client from './Client'
-import { getOpcodeName } from '@packets'
+import { getOpcodeName, ReceiveOpcode } from '@packets'
 
 declare module 'net' {
   interface Socket {
@@ -22,19 +22,19 @@ class MapleServer {
   public version: number
   public subversion: string
   public locale: number
-  public packetHandler: PacketHandler
+  public packetHandlerManager: PacketHandlerManager
 
   public connectedClients: Client[]
   public tcpServer: any
   public pingerId: NodeJS.Timer
 
-  constructor(packetHandler: PacketHandler, options) {
+  constructor(packetHandlerManager: PacketHandlerManager, options) {
     this.name = options.name
     this.port = options.port
     this.version = options.version
     this.subversion = options.subversion
     this.locale = options.locale
-    this.packetHandler = packetHandler
+    this.packetHandlerManager = packetHandlerManager
 
     this.connectedClients = []
 
@@ -42,9 +42,11 @@ class MapleServer {
 
     console.log('Starting pinger')
 
-    packetHandler.setHandler(0x0018, socket => {
-      socket.socket.ponged = true
-    })
+    packetHandlerManager.setHandler(
+      new PacketHandler(0x0018, client => {
+        client.socket.ponged = true
+      })
+    )
 
     this.tcpServer.listen(this.port)
     console.log('Waiting for people on port ' + this.port + '...')
@@ -87,19 +89,7 @@ class MapleServer {
 
             const reader = new PacketReader(block)
             const opCode = reader.readUInt16()
-            const handler = this.packetHandler.getHandler(opCode)
-
-            if (handler) {
-              try {
-                await handler(client, reader)
-              } catch (exception) {
-                console.error(exception, exception.stack)
-              }
-            } else {
-              console.warn(
-                `No packet handler for 0x${opCode.toString(16)} (${getOpcodeName(opCode) || 'unknown opcode name'})`
-              )
-            }
+            await this.packetHandlerManager.runHandler(opCode, client, reader)
           }
 
           socket.header = !socket.header
