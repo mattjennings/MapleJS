@@ -35,10 +35,10 @@ export class Equip extends Item implements Item {
     writer.writeUInt32(this.itemId)
 
     if (this.cashId) {
-      writer.writeUInt8(true)
+      writer.writeUInt8(1)
       writer.writeUInt64(this.cashId)
     } else {
-      writer.writeUInt8(false)
+      writer.writeUInt8(0)
     }
     writer.writeDate(this.expires)
 

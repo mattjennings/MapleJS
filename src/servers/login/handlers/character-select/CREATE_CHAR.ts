@@ -127,7 +127,7 @@ export default new PacketHandler(ReceiveOpcode.CREATE_CHAR, async (client, reade
   await character.addStats(packet)
   await character.addAvatar(packet)
   packet.writeUInt8(0) // ?
-  packet.writeUInt8(false) // No rankings
+  packet.writeUInt8(0) // No rankings
 
   client.sendPacket(packet)
 })

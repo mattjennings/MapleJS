@@ -71,6 +71,15 @@ class PacketReader {
     return ret
   }
 
+  /**
+   * Maple ASCII strings will have the first value as the length of the string, followed by a 0, and then the string contents
+   */
+  public readMapleAsciiString() {
+    const stringLength = this.readInt8()
+    this.offset += 1
+    return this.readString(stringLength)
+  }
+
   public skip(pAmount) {
     this.offset += pAmount
   }

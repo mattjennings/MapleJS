@@ -39,7 +39,7 @@ export default new PacketHandler(ReceiveOpcode.CHECK_CHAR_NAME, async (client, r
 
   const packet = new PacketWriter(0x000d)
   packet.writeString(name)
-  packet.writeUInt8(taken) // Taken bool
+  packet.writeUInt8(taken ? 1 : 0) // name availability
 
   client.sendPacket(packet)
 })

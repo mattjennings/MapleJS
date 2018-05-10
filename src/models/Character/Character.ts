@@ -81,7 +81,7 @@ export class Character extends Typegoose {
     }
 
     // Write info
-    writer.writeUInt8(this.female)
+    writer.writeUInt8(this.female ? 1 : 0)
     writer.writeUInt8(this.skin)
     writer.writeUInt32(this.eyes)
 
@@ -115,7 +115,7 @@ export class Character extends Typegoose {
     const docId = getDocumentId(this)
     writer.writeUInt32(docId)
     writer.writeString(this.name, 13)
-    writer.writeUInt8(this.female)
+    writer.writeUInt8(this.female ? 1 : 0)
     writer.writeUInt8(this.skin)
     writer.writeUInt32(this.eyes)
     writer.writeUInt32(this.hair)

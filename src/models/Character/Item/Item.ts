@@ -22,10 +22,10 @@ export class Item extends Typegoose {
     writer.writeUInt32(this.itemId)
 
     if (this.cashId) {
-      writer.writeUInt8(true)
+      writer.writeUInt8(1) // is cash item? - mj
       writer.writeUInt64(this.cashId)
     } else {
-      writer.writeUInt8(false)
+      writer.writeUInt8(0) // is not cash item? - mj
     }
     writer.writeDate(this.expires)
   }

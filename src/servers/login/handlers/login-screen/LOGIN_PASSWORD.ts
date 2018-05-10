@@ -86,7 +86,7 @@ export default new PacketHandler(ReceiveOpcode.LOGIN_PASSWORD, async (client, re
       packet.writeUInt32(0)
 
       // PIC info
-      packet.writeUInt8(true)
+      packet.writeUInt8(1)
       packet.writeUInt8(1)
     }
   } catch (exception) {

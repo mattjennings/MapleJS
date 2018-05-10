@@ -1,4 +1,4 @@
-import { ReceiveOpcode } from '@packets'
+import { ReceiveOpcode, SendOpcode } from '@packets'
 import { PacketHandler, PacketWriter } from '@util/maplenet'
 const serverConfig = require('@config/server')
 
@@ -25,7 +25,8 @@ export default new PacketHandler(ReceiveOpcode.CHAR_LIST_REQUEST, async (client,
 
   const world = getWorldInfoById(worldId)
 
-  const packet = new PacketWriter(0x000b)
+  const packet = new PacketWriter(SendOpcode.CHARLIST)
+
   if (world === null || channelId < 0 || channelId > world.channels) {
     packet.writeUInt8(8)
   } else {
@@ -53,14 +54,14 @@ export default new PacketHandler(ReceiveOpcode.CHAR_LIST_REQUEST, async (client,
       // packet.writeUInt32(character.rankJob);
       // packet.writeUInt32(character.rankJobChange);
       /*
-    packet.writeUInt32(1);
-    packet.writeUInt32(1);
-    packet.writeUInt32(1);
-    packet.writeUInt32(1);
-    */
+      packet.writeUInt32(1);
+      packet.writeUInt32(1);
+      packet.writeUInt32(1);
+      packet.writeUInt32(1);
+      */
     }
 
-    packet.writeUInt8(1) // PIC registered
+    packet.writeUInt8(!!client.account.pic ? 1 : 0) // PIC registered
     packet.writeUInt32(6) // Max Characters
   }
 
