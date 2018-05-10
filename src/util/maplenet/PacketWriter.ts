@@ -37,56 +37,56 @@ class PacketWriter {
     }
   }
 
-  public writeInt8(value) {
+  public writeInt8(value: number) {
     expandIfNeeded.call(this, 1)
     this.buffer.writeInt8(value, this.writtenData, true)
     this.writtenData += 1
     return this
   }
 
-  public writeInt16(value) {
+  public writeInt16(value: number) {
     expandIfNeeded.call(this, 2)
     this.buffer.writeInt16LE(value, this.writtenData, true)
     this.writtenData += 2
     return this
   }
 
-  public writeInt32(value) {
+  public writeInt32(value: number) {
     expandIfNeeded.call(this, 4)
     this.buffer.writeInt32LE(value, this.writtenData, true)
     this.writtenData += 4
     return this
   }
 
-  public writeUInt8(value) {
+  public writeUInt8(value: number) {
     expandIfNeeded.call(this, 1)
     this.buffer.writeUInt8(value, this.writtenData, true)
     this.writtenData += 1
     return this
   }
 
-  public writeUInt16(value) {
+  public writeUInt16(value: number) {
     expandIfNeeded.call(this, 2)
     this.buffer.writeUInt16LE(value, this.writtenData, true)
     this.writtenData += 2
     return this
   }
 
-  public writeUInt32(value) {
+  public writeUInt32(value: number) {
     expandIfNeeded.call(this, 4)
     this.buffer.writeUInt32LE(value, this.writtenData, true)
     this.writtenData += 4
     return this
   }
 
-  public writeFloat32(value) {
+  public writeFloat32(value: number) {
     expandIfNeeded.call(this, 4)
     this.buffer.writeFloatLE(value, this.writtenData, true)
     this.writtenData += 4
     return this
   }
 
-  public writeFloat64(value) {
+  public writeFloat64(value: number) {
     expandIfNeeded.call(this, 8)
     this.buffer.writeDoubleLE(value, this.writtenData, true)
     this.writtenData += 8
@@ -106,12 +106,12 @@ class PacketWriter {
     return this
   }
 
-  public writeDate(value) {
+  public writeDate(value: Date) {
     this.writeUInt64(getFiletimeFromDate(value))
     return this
   }
 
-  public writeString(value, length?) {
+  public writeString(value: string, length?) {
     if (value === null || typeof value === 'undefined') {
       value = ''
     }
@@ -139,7 +139,7 @@ class PacketWriter {
     return this
   }
 
-  public writeHexString(value) {
+  public writeHexString(value: string) {
     value = value.replace(/[^0-9A-Fa-f]/g, '')
     if (value.length % 2 !== 0) {
       throw new Error('HexString is not a valid length. Text: ' + value)
