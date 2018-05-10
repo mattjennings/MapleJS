@@ -19,6 +19,9 @@
       ],
       "@config/*": [
         "config/*"
+      ],
+      "@packets": [
+        "src/packets/index.ts"
       ]
     },
     "emitDecoratorMetadata": true,

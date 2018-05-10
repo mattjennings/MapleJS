@@ -6,89 +6,12 @@ import Rechargeable from '@models/Character/Item/Rechargeable'
 import { findDocumentByCutoffId } from '@util/mongoose'
 import { getWorldInfoById, ipStringToBytes } from '@util/helpers'
 import { InstanceType } from 'typegoose'
+import { ReceiveOpcode } from '@packets'
+
 const serverConfig = require('@config/server')
 
-async function isNameValid(name, admin) {
-  if (!admin) {
-    // Check if is a forbidden name
-    let forbidden = false
-    nxFiles.etc.child('ForbiddenName.img').forEach(node => {
-      if (name.indexOf(node.getData()) !== -1) {
-        forbidden = true
-        return false
-      }
-    })
-    if (forbidden) {
-      return false
-    }
-  }
-
-  const count = await CharacterModel.count({ name })
-  return count === 0
-}
-
-function checkItemValidity(job, female, element, objectId) {
-  let infoName = ''
-  switch (job) {
-    case 0:
-      infoName = 'Info/Char'
-      break // Adventurer
-    case 1000:
-      infoName = 'PremiumChar'
-      break // Cygnus
-    case 2000:
-      infoName = 'OrientChar'
-      break // Aran
-  }
-
-  infoName += female ? 'Female' : 'Male'
-
-  infoName += '/' + element
-
-  let valid = false
-
-  nxFiles.etc.getPath('MakeCharInfo.img/' + infoName).forEach(function(node) {
-    if (objectId === node.getData()) {
-      valid = true
-      return false
-    }
-  })
-
-  return valid
-}
-
-async function createItem(character: InstanceType<Character>, pItemId, pSlot, pInventory) {
-  let item
-  if (pInventory === 1) {
-    item = new Equip()
-  } else {
-    item = new Rechargeable()
-    item.amount = 1
-  }
-  item.character = character._id
-  item.inventory = pInventory
-  item.slot = pSlot
-  item.itemId = pItemId
-  await item.save()
-}
-
-function EnterChannel(client, pCharacterId) {
-  const world = getWorldInfoById(client.state.worldId)
-
-  // Remote-hack vulnerable
-  const packet = new PacketWriter(0x000c)
-  packet.writeUInt16(0)
-  packet.writeBytes(ipStringToBytes(world.publicIP))
-  packet.writeUInt16(world.portStart + client.state.channelId)
-  packet.writeUInt32(pCharacterId)
-  packet.writeUInt8(0) // Flag bit 1 set = korean popup?
-  packet.writeUInt32(0) // Minutes left on Internet Cafe?
-
-  client.sendPacket(packet)
-}
-
 export default (packetHandler: PacketHandler) => {
-  packetHandler.setHandler(0x0015, async function(client, reader) {
+  packetHandler.setHandler(ReceiveOpcode.CHECK_CHAR_NAME, async (client, reader) => {
     // Check character name
 
     if (!client.account || !client.state) {
@@ -110,7 +33,7 @@ export default (packetHandler: PacketHandler) => {
     client.sendPacket(packet)
   })
 
-  packetHandler.setHandler(0x0017, async function(client, reader) {
+  packetHandler.setHandler(ReceiveOpcode.DELETE_CHAR, async (client, reader) => {
     // Deleting character
     if (!client.account || !client.state) {
       client.disconnect('Trying the check character name while not loggedin')
@@ -143,7 +66,7 @@ export default (packetHandler: PacketHandler) => {
     client.sendPacket(packet)
   })
 
-  packetHandler.setHandler(0x0013, function(client, reader) {
+  packetHandler.setHandler(ReceiveOpcode.CHAR_SELECT, (client, reader) => {
     // Select character
 
     if (!client.account || !client.state) {
@@ -154,10 +77,10 @@ export default (packetHandler: PacketHandler) => {
     const characterId = reader.readUInt32()
     const macAddr = reader.readString()
     const macAddrNoDashes = reader.readString()
-    EnterChannel(client, characterId)
+    enterChannel(client, characterId)
   })
 
-  packetHandler.setHandler(0x001e, function(client, reader) {
+  packetHandler.setHandler(ReceiveOpcode.CHAR_SELECT_WITH_PIC, (client, reader) => {
     // Select character using PIC
 
     if (!client.account || !client.state) {
@@ -169,10 +92,10 @@ export default (packetHandler: PacketHandler) => {
     const characterId = reader.readUInt32()
     const macAddr = reader.readString()
     const macAddrNoDashes = reader.readString()
-    EnterChannel(client, characterId)
+    enterChannel(client, characterId)
   })
 
-  packetHandler.setHandler(0x0016, async function(client, reader) {
+  packetHandler.setHandler(ReceiveOpcode.CREATE_CHAR, async function(client, reader) {
     // Create character
 
     if (!client.account || !client.state) {
@@ -297,4 +220,83 @@ export default (packetHandler: PacketHandler) => {
 
     client.sendPacket(packet)
   })
+}
+
+async function isNameValid(name, admin) {
+  if (!admin) {
+    // Check if is a forbidden name
+    let forbidden = false
+    nxFiles.etc.child('ForbiddenName.img').forEach(node => {
+      if (name.indexOf(node.getData()) !== -1) {
+        forbidden = true
+        return false
+      }
+    })
+    if (forbidden) {
+      return false
+    }
+  }
+
+  const count = await CharacterModel.count({ name })
+  return count === 0
+}
+
+function checkItemValidity(job, female, element, objectId) {
+  let infoName = ''
+  switch (job) {
+    case 0:
+      infoName = 'Info/Char'
+      break // Adventurer
+    case 1000:
+      infoName = 'PremiumChar'
+      break // Cygnus
+    case 2000:
+      infoName = 'OrientChar'
+      break // Aran
+  }
+
+  infoName += female ? 'Female' : 'Male'
+
+  infoName += '/' + element
+
+  let valid = false
+
+  nxFiles.etc.getPath('MakeCharInfo.img/' + infoName).forEach(function(node) {
+    if (objectId === node.getData()) {
+      valid = true
+      return false
+    }
+  })
+
+  return valid
+}
+
+async function createItem(character: InstanceType<Character>, pItemId, pSlot, pInventory) {
+  let item
+  if (pInventory === 1) {
+    item = new Equip()
+  } else {
+    item = new Rechargeable()
+    item.amount = 1
+  }
+  item.character = character._id
+  item.inventory = pInventory
+  item.slot = pSlot
+  item.itemId = pItemId
+  await item.save()
+}
+
+function enterChannel(client, pCharacterId) {
+  const world = getWorldInfoById(client.state.worldId)
+
+  // Remote-hack vulnerable
+  const packet = new PacketWriter(0x000c)
+  packet.writeUInt16(0)
+  packet.writeBytes(ipStringToBytes(world.publicIP))
+  packet.writeUInt16(world.portStart + client.state.channelId)
+  packet.writeUInt32(pCharacterId)
+  packet.writeUInt8(0) // Flag bit 1 set = korean popup?
+  packet.writeUInt32(0) // Minutes left on Internet Cafe?
+
+  client.sendPacket(packet)
 }

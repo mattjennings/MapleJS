@@ -1,5 +1,5 @@
 import { PacketWriter, PacketHandler } from '@util/maplenet'
-
+import { ReceiveOpcode } from '@packets'
 const serverConfig = require('@config/server')
 
 const getWorldInfoById = id => {
@@ -62,12 +62,10 @@ const showWorldsPacketHandler = client => {
 }
 
 export default (packetHandler: PacketHandler) => {
-  packetHandler.setHandler(0x0004, showWorldsPacketHandler)
-  packetHandler.setHandler(0x000b, showWorldsPacketHandler)
+  packetHandler.setHandler(ReceiveOpcode.SERVERLIST_REQUEST, showWorldsPacketHandler)
+  packetHandler.setHandler(ReceiveOpcode.SERVERLIST_REREQUEST, showWorldsPacketHandler)
 
-  packetHandler.setHandler(0x0006, client => {
-    // Request world state
-
+  packetHandler.setHandler(ReceiveOpcode.SERVERSTATUS_REQUEST, client => {
     if (!client.account) {
       client.disconnect('Trying to select world while not loggedin')
       return
@@ -80,7 +78,7 @@ export default (packetHandler: PacketHandler) => {
     client.sendPacket(packet)
   })
 
-  packetHandler.setHandler(0x0005, async (client, reader) => {
+  packetHandler.setHandler(ReceiveOpcode.CHARLIST_REQUEST, async (client, reader) => {
     // Select channel
 
     if (!client.account) {

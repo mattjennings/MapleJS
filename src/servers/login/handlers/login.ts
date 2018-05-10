@@ -2,11 +2,12 @@ import * as bcrypt from 'bcrypt'
 import { PacketWriter, PacketHandler } from '@util/maplenet'
 import Account from '@models/Account'
 import { getDocumentId } from '@util/mongoose'
+import { ReceiveOpcode } from '@packets'
 
 const serverConfig = require('@config/server')
 
 export default (packetHandler: PacketHandler) => {
-  packetHandler.setHandler(0x0001, async (client, reader) => {
+  packetHandler.setHandler(ReceiveOpcode.LOGIN_PASSWORD, async (client, reader) => {
     const username = reader.readString()
     let password = reader.readString()
 

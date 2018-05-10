@@ -3,6 +3,7 @@ import * as net from 'net'
 import { findIndex } from 'lodash'
 import { mapleSocket, PacketWriter, PacketReader, PacketHandler } from '@util/maplenet'
 import Client from './Client'
+import { getOpcodeName } from '@packets'
 
 declare module 'net' {
   interface Socket {
@@ -89,14 +90,15 @@ class MapleServer {
             const handler = this.packetHandler.getHandler(opCode)
 
             if (handler) {
-              console.warn('Processing handler for packet 0x' + opCode.toString(16))
               try {
                 await handler(client, reader)
               } catch (exception) {
                 console.error(exception, exception.stack)
               }
             } else {
-              console.warn('No packet handler for 0x' + opCode.toString(16))
+              console.warn(
+                `No packet handler for 0x${opCode.toString(16)} (${getOpcodeName(opCode) || 'unknown opcode name'})`
+              )
             }
           }
 
