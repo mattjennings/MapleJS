@@ -22,6 +22,9 @@
       ],
       "@packets": [
         "src/packets/index.ts"
+      ],
+      "@db": [
+        "src/db/index.ts"
       ]
     },
     "emitDecoratorMetadata": true,

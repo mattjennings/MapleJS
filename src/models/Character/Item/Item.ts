@@ -1,8 +1,6 @@
-import { ObjectID } from 'mongodb'
-import { InstanceType, Ref, Typegoose, instanceMethod, prop } from 'typegoose'
-import { Rechargeable } from '@models/Character/Item/Rechargeable'
 import { Character } from '@models/Character'
 import { PacketWriter } from '@util/maplenet'
+import { InstanceType, Ref, Typegoose, instanceMethod, prop } from 'typegoose'
 
 export class Item extends Typegoose {
   @prop({ ref: Character })

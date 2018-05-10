@@ -1,10 +1,9 @@
 import CharacterModel from '@models/Character'
 import { ReceiveOpcode } from '@packets'
 import { PacketHandler, PacketWriter } from '@util/maplenet'
-import { findDocumentByCutoffId } from '@util/mongoose'
-
+import { InstanceType } from 'typegoose'
+import { Account } from '@models/Account'
 export default new PacketHandler(ReceiveOpcode.DELETE_CHAR, async (client, reader) => {
-  // Deleting character
   if (!client.account || !client.state) {
     client.disconnect('Trying the check character name while not loggedin')
     return
@@ -13,16 +12,15 @@ export default new PacketHandler(ReceiveOpcode.DELETE_CHAR, async (client, reade
   const pic = reader.readString()
 
   const id = reader.readUInt32()
-  const character = await findDocumentByCutoffId(CharacterModel, id, {
-    worldId: client.state.worldId
-  })
+  const character = await CharacterModel.findOne({ id, worldId: client.state.worldId })
+  const characterAccount: InstanceType<Account> = client.account
 
   if (!character) {
     client.disconnect('Character did not exist.')
     return
   }
 
-  if (!client.account.equals(character.account)) {
+  if (!client.account.equals(characterAccount)) {
     client.disconnect('Client tried to delete someone elses character.')
     return
   }

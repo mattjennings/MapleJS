@@ -32,6 +32,20 @@
     "@types/events" "*"
     "@types/node" "*"
 
+"@types/mongoose-auto-increment@^5.0.30":
+  version "5.0.30"
+  resolved "https://registry.yarnpkg.com/@types/mongoose-auto-increment/-/mongoose-auto-increment-5.0.30.tgz#3b85faedac98cf74248fafb6d12f854cb2721733"
+  dependencies:
+    "@types/mongoose" "*"
+
+"@types/mongoose@*":
+  version "5.0.13"
+  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.0.13.tgz#5f9844588f63a9603f06a8a38eba82a99c3fea32"
+  dependencies:
+    "@types/events" "*"
+    "@types/mongodb" "*"
+    "@types/node" "*"
+
 "@types/mongoose@^5.0.12":
   version "5.0.12"
   resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.0.12.tgz#d7764e0e6850e047253769d4c4e8b70d0c3a70e7"
@@ -43,6 +57,10 @@
 "@types/node@*", "@types/node@^10.0.4":
   version "10.0.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.0.4.tgz#130598ee56e9a1210a53f557d64935571f05390d"
+
+"@types/shortid@^0.0.29":
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/@types/shortid/-/shortid-0.0.29.tgz#8093ee0416a6e2bf2aa6338109114b3fbffa0e9b"
 
 abbrev@1:
   version "1.1.1"
@@ -366,6 +384,12 @@ async-each@^1.0.0:
 async@2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/async/-/async-2.1.4.tgz#2d2160c7788032e4dd6cbe2502f1f9a2c8f6cde4"
+  dependencies:
+    lodash "^4.14.0"
+
+async@^2.5.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.6.0.tgz#61a29abb6fcc026fea77e56d1c6ec53a795951f4"
   dependencies:
     lodash "^4.14.0"
 
@@ -960,6 +984,10 @@ extend-shallow@^3.0.0, extend-shallow@^3.0.2:
     assign-symbols "^1.0.0"
     is-extendable "^1.0.1"
 
+extend@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
+
 external-editor@^2.0.4:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/external-editor/-/external-editor-2.2.0.tgz#045511cfd8d133f3846673d1047c154e214ad3d5"
@@ -1544,7 +1572,7 @@ lodash.unescape@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/lodash.unescape/-/lodash.unescape-4.0.1.tgz#bf2249886ce514cda112fae9218cdc065211fc9c"
 
-lodash@4.17.10, lodash@^4.14.0, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.3.0:
+lodash@4.17.10, lodash@^4.14.0, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.3.0, lodash@^4.6.1:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
@@ -1695,9 +1723,22 @@ mongodb@3.0.7:
   dependencies:
     mongodb-core "3.0.7"
 
+mongoose-auto-increment@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/mongoose-auto-increment/-/mongoose-auto-increment-5.0.1.tgz#827e051d9cc371dabe8bff1a704431d341cb79df"
+  dependencies:
+    extend "^3.0.0"
+
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
+
+mongoose-sequence@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/mongoose-sequence/-/mongoose-sequence-4.0.1.tgz#831ddd66ef96abf008a89413ea6d25837dfacc55"
+  dependencies:
+    async "^2.5.0"
+    lodash "^4.6.1"
 
 mongoose@^5.0.17:
   version "5.0.17"
@@ -2377,6 +2418,10 @@ shebang-command@^1.2.0:
 shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
+
+shortid@^2.2.8:
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.8.tgz#033b117d6a2e975804f6f0969dbe7d3d0b355131"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"

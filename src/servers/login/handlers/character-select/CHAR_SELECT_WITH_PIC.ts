@@ -1,8 +1,5 @@
-import CharacterModel from '@models/Character'
-import { ReceiveOpcode, SendOpcode } from '@packets'
+import { ReceiveOpcode } from '@packets'
 import { PacketHandler, PacketWriter } from '@util/maplenet'
-import { findDocumentByCutoffId } from '@util/mongoose'
-import { getWorldInfoById, ipStringToBytes } from '@util/helpers'
 
 function wrongPicPacket() {
   const packet = new PacketWriter(0x001c)

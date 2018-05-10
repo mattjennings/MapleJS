@@ -1,7 +1,5 @@
-import CharacterModel from '@models/Character'
 import { ReceiveOpcode } from '@packets'
-import { PacketHandler, PacketWriter } from '@util/maplenet'
-import { findDocumentByCutoffId } from '@util/mongoose'
+import { PacketHandler } from '@util/maplenet'
 
 export default new PacketHandler(ReceiveOpcode.CHAR_SELECT, async (client, reader) => {
   if (!client.account || !client.state) {

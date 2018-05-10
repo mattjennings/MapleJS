@@ -1,12 +1,11 @@
-import { PacketWriter, PacketHandler } from '@util/maplenet'
-import nxFiles from '@nxFiles'
 import CharacterModel, { Character } from '@models/Character'
 import Equip from '@models/Character/Item/Equip'
 import Rechargeable from '@models/Character/Item/Rechargeable'
-import { findDocumentByCutoffId } from '@util/mongoose'
-import { getWorldInfoById, ipStringToBytes } from '@util/helpers'
-import { InstanceType } from 'typegoose'
+import nxFiles from '@nxFiles'
 import { ReceiveOpcode } from '@packets'
+import { PacketHandler, PacketWriter } from '@util/maplenet'
+import { InstanceType } from 'typegoose'
+import { generate } from 'shortid'
 
 export default new PacketHandler(ReceiveOpcode.CREATE_CHAR, async (client, reader) => {
   if (!client.account || !client.state) {
@@ -166,7 +165,7 @@ function checkItemValidity(job, female, element, objectId) {
 
   let valid = false
 
-  nxFiles.etc.getPath('MakeCharInfo.img/' + infoName).forEach(function(node) {
+  nxFiles.etc.getPath('MakeCharInfo.img/' + infoName).forEach(node => {
     if (objectId === node.getData()) {
       valid = true
       return false

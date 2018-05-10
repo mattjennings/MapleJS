@@ -1,9 +1,5 @@
 import packetHandlerManager from './packetHandlerManager'
 import MapleServer from '../MapleServer'
-const mongoose = require('mongoose')
-const serverConfig = require('@config/server')
-
-mongoose.connect(serverConfig.databaseConnectionString)
 
 const server = new MapleServer(packetHandlerManager, {
   name: 'loginserver-0',

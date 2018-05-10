@@ -1,5 +1,7 @@
 import { ReceiveOpcode, SendOpcode } from '@packets'
 import { PacketHandler, PacketWriter } from '@util/maplenet'
+
+import { asyncForEach } from '@util/helpers'
 const serverConfig = require('@config/server')
 
 const getWorldInfoById = id => {
@@ -40,9 +42,7 @@ export default new PacketHandler(ReceiveOpcode.CHAR_LIST_REQUEST, async (client,
     const characters = await client.account.getCharacters(client.state.worldId)
     packet.writeUInt8(characters.length)
 
-    for (let i = 0; i < characters.length; i++) {
-      const character = characters[i]
-
+    await asyncForEach(characters, async character => {
       await character.addStats(packet)
       await character.addAvatar(packet)
 
@@ -59,7 +59,7 @@ export default new PacketHandler(ReceiveOpcode.CHAR_LIST_REQUEST, async (client,
       packet.writeUInt32(1);
       packet.writeUInt32(1);
       */
-    }
+    })
 
     packet.writeUInt8(!!client.account.pic ? 1 : 0) // PIC registered
     packet.writeUInt32(6) // Max Characters

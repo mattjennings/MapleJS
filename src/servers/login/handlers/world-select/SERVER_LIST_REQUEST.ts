@@ -1,7 +1,5 @@
-import CharacterModel from '@models/Character'
 import { ReceiveOpcode } from '@packets'
 import { PacketHandler, PacketWriter } from '@util/maplenet'
-import { findDocumentByCutoffId } from '@util/mongoose'
 const serverConfig = require('@config/server')
 
 export default new PacketHandler(ReceiveOpcode.SERVER_LIST_REQUEST, async (client, reader) => {

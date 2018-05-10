@@ -71,7 +71,7 @@ export default new PacketHandler(ReceiveOpcode.LOGIN_PASSWORD, async (client, re
       packet.writeUInt16(0)
       packet.writeUInt32(0)
 
-      packet.writeUInt32(getDocumentId(account))
+      packet.writeUInt32(account.id)
       packet.writeUInt8(0)
       packet.writeUInt8(account.isAdmin ? 0x40 : 0) // Admin flag
       packet.writeUInt8(0)
