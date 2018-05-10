@@ -47,7 +47,7 @@ export default new PacketHandler(ReceiveOpcode.CHAR_LIST_REQUEST, async (client,
 
       packet.writeUInt8(0) // ?
 
-      packet.writeUInt8(false) // No rankings
+      packet.writeUInt8(0) // No rankings
       // packet.writeUInt32(character.rankWorld);
       // packet.writeUInt32(character.rankWorldChange);
       // packet.writeUInt32(character.rankJob);
