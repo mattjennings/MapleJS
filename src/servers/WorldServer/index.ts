@@ -8,9 +8,6 @@ export interface WorldServerOptions extends MapleServerOptions {
   channelId: number
 }
 export default class WorldServer extends MapleServer {
-  public worldId: number
-  public channelId: number
-
   constructor(options: WorldServerOptions) {
     const { worldId, channelId, ...otherOptions } = options
     super(packetHandlerManager, otherOptions as MapleServerOptions)

@@ -38,6 +38,9 @@ export default class MapleServer {
   public tcpServer: any
   public pingerId: NodeJS.Timer
 
+  public worldId?: number
+  public channelId?: number
+
   constructor(packetHandlerManager: PacketHandlerManager, options: MapleServerOptions) {
     this.name = options.name
     this.port = options.port

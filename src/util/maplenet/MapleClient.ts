@@ -10,7 +10,7 @@ import { InstanceType } from 'typegoose'
 import { getWorldInfoById, ipStringToBytes } from '@util/helpers'
 
 export default class MapleClient {
-  public server: WorldServer
+  public server: MapleServer
   public socket: net.Socket
 
   public account?: InstanceType<Account>
@@ -24,7 +24,7 @@ export default class MapleClient {
   public portalCount?: number
   public lastTickCount?: number
 
-  constructor(server: WorldServer, socket: net.Socket) {
+  constructor(server: MapleServer, socket: net.Socket) {
     this.server = server
     this.socket = socket
   }
