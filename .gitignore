@@ -3,4 +3,5 @@
 /docker
 .settings
 config/server.json
-dist
+.vscode/settings
+yarn-error.log
