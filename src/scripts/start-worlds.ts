@@ -1,7 +1,7 @@
 import WorldServer from '../servers/WorldServer'
 import * as child_process from 'child_process'
 import { forEach } from 'lodash'
-import { MapleServerOptions } from '@util/maplenet/MapleServer'
+import { WorldServerOptions } from '@servers/WorldServer'
 
 const serverConfig = require('@config/server')
 const { worlds } = serverConfig
@@ -10,7 +10,7 @@ if (!worlds) {
   throw Error('No worlds found in config/server.json')
 }
 
-const spawnInstance = (options: MapleServerOptions) => {
+const spawnInstance = (options: WorldServerOptions) => {
   const instance = child_process.spawn(
     'ts-node',
     [
@@ -73,6 +73,8 @@ forEach(worlds, (world, key) => {
         name: `world-${key}-channel-${channelNumber + 1}`,
         ip: world.ip || '127.0.0.1',
         port: world.portStart + channelNumber,
+        worldId: world.id,
+        channelId: channelNumber + 1,
         version: serverConfig.version || 83,
         subversion: serverConfig.subversion || '1',
         locale: serverConfig.locale || 8

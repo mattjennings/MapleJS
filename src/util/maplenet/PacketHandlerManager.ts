@@ -35,6 +35,7 @@ class PacketHandlerManager {
     const handler = this.getHandler(opcode)
     if (handler) {
       try {
+        console.log(`Executing PacketHandler for ${handler.getOpcodeString()} (${handler.getName()})`)
         await handler.callback(client, reader)
       } catch (exception) {
         console.error(exception, exception.stack)

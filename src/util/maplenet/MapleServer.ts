@@ -111,7 +111,7 @@ export default class MapleServer {
         console.log('Connection closed.')
         const index = findIndex(this.connectedClients, { socket })
         if (index > -1) {
-          this.connectedClients.splice(index, 1)
+          const client = this.connectedClients.splice(index, 1)
         }
         console.log('Connected clients remaining: ' + this.connectedClients.length)
       })

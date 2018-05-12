@@ -5,15 +5,36 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch",
+      "name": "Launch World",
       "type": "node",
       "request": "launch",
       "runtimeVersion": "9.9.0",
       "runtimeArgs": ["-r", "ts-node/register", "-r", "tsconfig-paths/register"],
-      "args": ["src/index.ts"],
+      "args": [
+        "src/scripts/spawn-world.ts",
+        "--name", "scania",
+        "--ip", "192.168.0.137",
+        "--port", "8500",
+        "--version", "83",
+        "--subversion", "1",
+        "--locale", "8",
+        "--worldId", "0",
+        "--channelId", "1"
+      ],
       "cwd": "${workspaceFolder}",
       "protocol": "inspector",
       "internalConsoleOptions": "openOnSessionStart"
-  }
+  },
+  {
+    "name": "Launch Login",
+    "type": "node",
+    "request": "launch",
+    "runtimeVersion": "9.9.0",
+    "runtimeArgs": ["-r", "ts-node/register", "-r", "tsconfig-paths/register"],
+    "args": ["src/scripts/start-login.ts"],
+    "cwd": "${workspaceFolder}",
+    "protocol": "inspector",
+    "internalConsoleOptions": "openOnSessionStart"
+}
   ]
 }

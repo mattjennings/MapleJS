@@ -22,16 +22,18 @@ if (!argv.subversion) {
 }
 
 if (!argv.locale) {
-  throw Error('Please provide a subversion for the server. ex: --locale 8')
+  throw Error('Please provide a locale for the server. ex: --locale 8')
 }
 
 const server = new WorldServer({
-  name: argv.name,
-  ip: argv.ip,
+  name: argv.name.toString(),
+  ip: argv.ip.toString(),
   port: parseInt(argv.port, 10),
   version: parseInt(argv.version, 10),
-  subversion: argv.subversion,
-  locale: parseInt(argv.locale, 10)
+  subversion: argv.subversion.toString(),
+  locale: parseInt(argv.locale, 10),
+  worldId: parseInt(argv.worldId, 10),
+  channelId: parseInt(argv.channelId, 10)
 })
 
 process.on('SIGINT', () => {

@@ -1,5 +1,6 @@
 import * as net from 'net'
 import MapleServer from './MapleServer'
+import WorldServer from '@servers/WorldServer'
 import { mapleCrypto, PacketWriter } from '@util/maplenet'
 import { Account } from '@models/Account'
 import { Character } from '@models/Character'
@@ -9,7 +10,7 @@ import { InstanceType } from 'typegoose'
 import { getWorldInfoById, ipStringToBytes } from '@util/helpers'
 
 export default class MapleClient {
-  public server: MapleServer
+  public server: WorldServer
   public socket: net.Socket
 
   public account?: InstanceType<Account>
@@ -23,7 +24,7 @@ export default class MapleClient {
   public portalCount?: number
   public lastTickCount?: number
 
-  constructor(server: MapleServer, socket: net.Socket) {
+  constructor(server: WorldServer, socket: net.Socket) {
     this.server = server
     this.socket = socket
   }

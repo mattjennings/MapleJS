@@ -17,7 +17,7 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
   }
 
   const characterId = reader.readUInt32()
-  const character = await CharacterModel.findOne({ _id: characterId, worldId: client.state.worldId })
+  const character = await CharacterModel.findOne({ _id: characterId, worldId: client.server.worldId })
 
   if (!character) {
     client.disconnect('Character not found!')

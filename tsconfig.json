@@ -29,8 +29,8 @@
       "@db": [
         "src/db/index.ts"
       ],
-      "@servers": [
-        "src/servers"
+      "@servers/*": [
+        "src/servers/*"
       ]
     },
     "emitDecoratorMetadata": true,

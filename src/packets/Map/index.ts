@@ -1,184 +1,111 @@
-import { PacketWriter, MapleClient } from '@util/maplenet'
-import { BitSet32 } from '@packets'
-import MapManager from './MapManager'
 
-export enum PortalBlockedErrors {
-  CLOSED_FOR_NOW = 1,
-  CANNOT_GO_TO_THAT_PLACE = 2,
-  UNABLE_TO_APPROACH_DUE_TO_THE_FORCE_OF_THE_GROUND = 3,
-  CANNOT_TELEPORT_TO_OR_ON_THIS_MAP = 4,
-  // 5 same as 3
-  CAN_ONLY_BE_ENTERED_BY_PARTY_MEMBERS = 6,
-  CASHSHOP_IS_UNAVAILABLE = 7
-}
+// todo: this
+// find place for NX helper methods
+export default class Map {
+  constructor(nxNode) {
+    this.id = parseInt(nxNode.GetName(), 10)
+    this.clients = []
 
-export const getEnterMapPacket = client => {
-  const character = client.character
-  let i
+    const infoBlock = nxNode.Child('info')
 
-  const packet = new PacketWriter(0x00a0)
-  packet.writeUInt32(character)
-  packet.writeUInt8(character.stats.level)
-  packet.writeString(character.name)
+    const stringNXNode = findStringNXMapNode(this.id)
+    this.fieldName = getOrDefault_NXData(stringNXNode.Child('mapName'), '')
+    this.fieldStreetName = getOrDefault_NXData(
+      stringNXNode.Child('streetName'),
+      ''
+    )
 
-  // Guild info
-  packet.writeString('')
-  packet.writeUInt16(0)
-  packet.writeUInt8(0)
-  packet.writeUInt16(0)
-  packet.writeUInt8(0)
+    this.fieldType = getOrDefault_NXData(infoBlock.Child('fieldType'), 0)
+    this.returnMap = getOrDefault_NXData(infoBlock.Child('returnMap'), 999999999)
+    this.forcedReturn = getOrDefault_NXData(
+      infoBlock.Child('forcedReturn'),
+      999999999
+    )
+    this.mobRate = getOrDefault_NXData(infoBlock.Child('mobRate'), 0)
+    this.onFirstUserEnter = getOrDefault_NXData(
+      infoBlock.Child('onFirstUserEnter'),
+      ''
+    )
+    this.onUserEnter = getOrDefault_NXData(infoBlock.Child('onUserEnter'), '')
+    this.lvLimit = getOrDefault_NXData(infoBlock.Child('lvLimit'), 0)
+    this.lvForceMove = getOrDefault_NXData(infoBlock.Child('lvLimit'), 10000)
+    this.dropsExpire = getOrDefault_NXData(infoBlock.Child('everlast'), 0) === 0
 
-  {
-    const bits = new BitSet32(128)
+    let realNode = nxNode
+    while (realNode.Child('info').Child('link')) {
+      realNode = getMapNodePath(
+        realNode
+          .Child('info')
+          .Child('link')
+          .getData()
+      )
+    }
 
-    packet.writeBytes(bits.toBuffer())
-
-    packet.writeUInt8(0) // Unknown
-    packet.writeUInt8(0)
-  }
-
-  packet.writeUInt16(character.stats.job)
-
-  character.addAvatar(packet)
-
-  packet.writeUInt32(0) // Choco count: the amount of valentine boxes in its inventory (5110000)
-  packet.writeUInt32(0) // Active item ID
-  packet.writeUInt32(0) // Active chair ID
-
-  packet.writeUInt16(client.location.x) // X
-  packet.writeUInt16(client.location.y) // Y
-
-  packet.writeUInt8(client.location.stance) // Stance
-  packet.writeUInt16(client.location.foothold) // Foothold
-
-  packet.writeUInt8(0) // Probably admin flag! : GradeCode & 1. Doesn't seem to do anything, tho
-
-  {
-    for (i = 0; i < 3; i++) {
-      if (false) {
-        packet.writeUInt8(1)
-        packet.writeUInt32(0) // Pet Item ID
-        packet.writeString('') // Pet name
-        packet.writeUInt64(0) // Pet Cash ID
-        packet.writeUInt16(0) // X
-        packet.writeUInt16(0) // Y
-        packet.writeUInt16(0) // Stance
-        packet.writeUInt16(0) // Foothold
-        packet.writeUInt8(0) // Name tag
-        packet.writeUInt8(0) // Quote item
+    const portals = {}
+    ;(realNode.Child('portal') || []).ForEach(function(portalNode) {
+      const id = parseInt(portalNode.GetName(), 10)
+      portals[id] = {
+        id: id,
+        name: getOrDefault_NXData(portalNode.Child('pn'), ''),
+        type: getOrDefault_NXData(portalNode.Child('pt'), ''),
+        toMap: getOrDefault_NXData(portalNode.Child('tm'), ''),
+        toName: getOrDefault_NXData(portalNode.Child('tn'), ''),
+        script: getOrDefault_NXData(portalNode.Child('script'), ''),
+        x: getOrDefault_NXData(portalNode.Child('x'), 0),
+        y: getOrDefault_NXData(portalNode.Child('y'), 0)
       }
+    })
+
+    this.portals = portals
+
+    this.playableMapArea = new PlayableMapArea(nxNode)
+
+    this.bounds = this.playableMapArea.bounds
+    this.center = {
+      x: this.bounds.right - this.bounds.left,
+      y: this.bounds.bottom - this.bounds.top
     }
-    // Pets block
-    packet.writeUInt8(0)
+
+    this.lifePool = new LifePool(this, nxNode)
+
+    console.log('Loaded map: ' + this.id)
   }
 
-  packet.writeUInt32(0) // Taming mob level
-  packet.writeUInt32(0) // Taming mob EXP
-  packet.writeUInt32(0) // Taming mob Fatigue
+  public broadcastPacket(packet, skipClient) {
+    this.clients.forEach(function(client) {
+      if (client === skipClient) { return }
+      client.sendPacket(packet)
+    })
+  },
 
-  packet.writeUInt8(0)
-  if (false) {
-    // Miniroom
-    packet.writeUInt32(0)
-    packet.writeString('')
-    packet.writeUInt8(0)
-    packet.writeUInt8(0)
-    packet.writeUInt8(0)
-    packet.writeUInt8(0)
-    packet.writeUInt8(0)
-  }
+  addClient(client) {
+    this.clients.push(client)
 
-  packet.writeUInt8(0)
-  if (false) {
-    // Chalkboard
-    packet.writeString('')
-  }
+    // Broadcast the user entering
+    this.broadcastPacket(packets.map.getEnterMapPacket(client), client)
 
-  packet.writeUInt8(0)
-  if (false) {
-    // Couple ring
-    packet.writeUInt64(0)
-    packet.writeUInt64(0)
-    packet.writeUInt32(0)
-  }
+    // Show other characters for player
+    this.clients.forEach(function(loopClient) {
+      loopClient.sendPacket(packets.map.getEnterMapPacket(client))
+    })
+  },
 
-  packet.writeUInt8(0)
-  if (false) {
-    // Friend ring
-    packet.writeUInt64(0)
-    packet.writeUInt64(0)
-    packet.writeUInt32(0)
-  }
+  removeClient(client) {
+    this.clients.pop(client)
 
-  packet.writeUInt8(0)
-  if (false) {
-    // Marriage ring
-    packet.writeUInt32(0)
-    packet.writeUInt32(0)
-    packet.writeUInt32(0)
-  }
+    this.broadcastPacket(packets.map.getLeaveMapPacket(client), client)
+  },
 
-  packet.writeUInt8(0)
-  if (false) {
-    const amount = 0
-    packet.writeUInt32(amount)
-    for (i = 0; i < amount; i++) {
-      packet.writeUInt32(0) // OnNewYearRecordAdd ?
+  getPortalById(id) {
+    id = parseInt(id, 10)
+    if (this.portals.hasOwnProperty(id)) { return this.portals[id] }
+    return null
+  },
+
+  getPortalByName(name) {
+    for (const index in this.portals) {
+      if (this.portals[index].name === name) { return this.portals[index] }
     }
+    return null
   }
-
-  packet.writeUInt8(0) // Beserk?
-  packet.writeUInt8(0) // Unknown
-
-  return packet
-}
-
-export const getLeaveMapPacket = client => {
-  const packet = new PacketWriter(0x00a1)
-  packet.writeUInt32(client.character)
-
-  return packet
-}
-
-export const getPortalErrorPacket = error => {
-  const packet = new PacketWriter(0x0083)
-  packet.writeUInt8(error)
-  return packet
-}
-
-export const changeMap = (client, map, spawnPoint) => {
-  const newMap = MapManager.getMap(map)
-  if (newMap === null) {
-    return false
-  }
-
-  // Helper function for changing map.
-  const character = client.character
-
-  // Remove player from old map
-  MapManager.getMap(character.mapId).removeClient(client)
-
-  client.portalCount++
-  character.mapId = map
-  character.mapPos = spawnPoint
-  character.save()
-
-  const packet = new PacketWriter(0x007d)
-  packet.writeUInt32(client.server.channelId)
-  packet.writeUInt8(client.portalCount) // Portal count
-  packet.writeUInt8(0)
-  packet.writeUInt16(0)
-
-  packet.writeUInt8(0)
-  packet.writeUInt32(character.mapId)
-  packet.writeUInt8(character.mapPos)
-  packet.writeUInt16(character.stats.hp)
-  packet.writeUInt8(0)
-
-  packet.writeDate(new Date())
-
-  client.sendPacket(packet)
-
-  newMap.addClient(client)
-  return true
 }

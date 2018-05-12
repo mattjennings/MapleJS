@@ -7,7 +7,7 @@ class MapManager extends NxManager {
     mapId = parseInt(mapId, 10)
     const category = Math.floor(mapId / 100000000)
     const maname = this.addPadding('left', mapId, 9) + '.img'
-    return nxFiles.map.GetPath('Map/Map' + category + '/' + maname)
+    return nxFiles.map.getPath('Map/Map' + category + '/' + maname)
   }
 
   public getMap(mapId) {
