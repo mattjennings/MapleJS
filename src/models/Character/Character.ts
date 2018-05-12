@@ -9,8 +9,8 @@ import { Stats } from './Stats'
 
 @plugin(autoIncrement.plugin, { model: 'Character', field: '_id', startAt: 1 })
 export class Character extends Typegoose {
-  @prop({ ref: Account, refType: mongoose.Schema.Types.Number })
-  public account: Ref<Account>
+  @prop({ ref: Account, refType: 'number' })
+  public account: Ref<Account, number>
   @prop() public name: string
   @prop() public worldId: number
   @prop() public female: boolean

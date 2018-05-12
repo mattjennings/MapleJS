@@ -46,6 +46,14 @@
     "@types/mongodb" "*"
     "@types/node" "*"
 
+"@types/mongoose@5.0.10":
+  version "5.0.10"
+  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.0.10.tgz#fb370719379ed1a96cae6000e71673e3dd1f4ffb"
+  dependencies:
+    "@types/events" "*"
+    "@types/mongodb" "*"
+    "@types/node" "*"
+
 "@types/mongoose@^5.0.12":
   version "5.0.12"
   resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.0.12.tgz#d7764e0e6850e047253769d4c4e8b70d0c3a70e7"
@@ -2421,10 +2429,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-"typegoose@https://github.com/mattjennings/typegoose#a386f3d":
+"typegoose@https://github.com/mattjennings/typegoose#6e75ae160a02a2470b0b21d03257f6e62c9536ba":
   version "5.2.1"
-  resolved "https://github.com/mattjennings/typegoose#a386f3de0a03a8fee07d5d5d655f30fc97afd4f7"
+  resolved "https://github.com/mattjennings/typegoose#6e75ae160a02a2470b0b21d03257f6e62c9536ba"
   dependencies:
+    "@types/mongoose" "5.0.10"
     lodash "4.17.10"
 
 typescript-eslint-parser@^11.0.0:

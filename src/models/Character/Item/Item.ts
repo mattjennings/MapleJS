@@ -4,8 +4,8 @@ import { PacketWriter } from '@util/maplenet'
 import { InstanceType, Ref, Typegoose, instanceMethod, prop } from 'typegoose'
 
 export class Item extends Typegoose {
-  @prop({ ref: Character, refType: mongoose.Schema.Types.Number })
-  public character: Ref<Character>
+  @prop({ ref: Character, refType: 'number' })
+  public character: Ref<Character, number>
 
   @prop() public type: number
   @prop() public itemId: number
