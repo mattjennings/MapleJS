@@ -2,5 +2,5 @@
 *.nx
 /docker
 .settings
-serverConfig.json
+config/server.json
 dist
