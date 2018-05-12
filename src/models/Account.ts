@@ -3,9 +3,8 @@ import { prop, instanceMethod, Typegoose, ModelType, InstanceType, plugin } from
 import Character from './Character'
 import * as autoIncrement from 'mongoose-auto-increment'
 
-@plugin(autoIncrement.plugin, { model: 'Account', field: 'id', startAt: 1 })
+@plugin(autoIncrement.plugin, { model: 'Account', field: '_id', startAt: 1 })
 export class Account extends Typegoose {
-  @prop() public id: number
   @prop() public name?: string
   @prop() public password: string
   @prop({ default: null })
@@ -26,4 +25,4 @@ export class Account extends Typegoose {
   }
 }
 
-export default new Account().getModelForClass(Account)
+export default new Account().getModelForClass(Account, { existingMongoose: mongoose, schemaOptions: { _id: false } })

@@ -1,9 +1,10 @@
+import * as mongoose from 'mongoose'
 import { Character } from '@models/Character'
 import { PacketWriter } from '@util/maplenet'
 import { InstanceType, Ref, Typegoose, instanceMethod, prop } from 'typegoose'
 
 export class Item extends Typegoose {
-  @prop({ ref: Character })
+  @prop({ ref: Character, refType: mongoose.Schema.Types.Number })
   public character: Ref<Character>
 
   @prop() public type: number
@@ -30,5 +31,6 @@ export class Item extends Typegoose {
 }
 
 export default new Item().getModelForClass(Item, {
-  schemaOptions: { collection: 'items', discriminatorKey: '_type' }
+  schemaOptions: { collection: 'items', discriminatorKey: '_type' },
+  existingMongoose: mongoose
 })

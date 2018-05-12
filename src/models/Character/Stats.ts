@@ -20,4 +20,4 @@ export class Stats extends Typegoose {
   @prop() public fame: number
 }
 
-export default new Stats().getModelForClass(Stats)
+export default new Stats().getModelForClass(Stats, { existingMongoose: mongoose })

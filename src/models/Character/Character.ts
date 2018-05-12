@@ -1,3 +1,4 @@
+import * as mongoose from 'mongoose'
 import { Account } from '@models/Account'
 import { PacketWriter } from '@util/maplenet'
 import * as autoIncrement from 'mongoose-auto-increment'
@@ -6,10 +7,9 @@ import { Inventory } from './Inventory'
 import ItemModel, { Item } from './Item'
 import { Stats } from './Stats'
 
-@plugin(autoIncrement.plugin, { model: 'Character', field: 'id', startAt: 1 })
+@plugin(autoIncrement.plugin, { model: 'Character', field: '_id', startAt: 1 })
 export class Character extends Typegoose {
-  @prop() public id: number
-  @prop({ ref: Account })
+  @prop({ ref: Account, refType: mongoose.Schema.Types.Number })
   public account: Ref<Account>
   @prop() public name: string
   @prop() public worldId: number
@@ -112,7 +112,7 @@ export class Character extends Typegoose {
 
   @instanceMethod
   public addStats(this: InstanceType<Character>, writer: PacketWriter) {
-    writer.writeUInt32(this.id)
+    writer.writeUInt32(this._id)
     writer.writeString(this.name, 13)
     writer.writeUInt8(this.female ? 1 : 0)
     writer.writeUInt8(this.skin)
@@ -146,4 +146,7 @@ export class Character extends Typegoose {
   }
 }
 
-export default new Character().getModelForClass(Character)
+export default new Character().getModelForClass(Character, {
+  existingMongoose: mongoose,
+  schemaOptions: { _id: false }
+})

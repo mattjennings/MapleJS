@@ -2775,9 +2775,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typegoose@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/typegoose/-/typegoose-5.1.0.tgz#6f8101ea6aa690873d47b95a190920aa8256eea6"
+"typegoose@https://github.com/mattjennings/typegoose":
+  version "5.2.1"
+  resolved "https://github.com/mattjennings/typegoose#bd43ae73caffadd699d881c3489c5ad556f11949"
   dependencies:
     lodash "4.17.10"
 

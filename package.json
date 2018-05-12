@@ -6,7 +6,8 @@
 	"readmeFilename": "README.md",
 	"scripts": {
 		"start": "nodemon",
-		"db": "docker-compose up"
+		"db": "docker-compose up",
+		"postinstall": "cd node_modules/typegoose && npm i --only=production && npm run build -- --skipLibCheck"
 	},
 	"dependencies": {
 		"@types/mongodb": "^3.0.18",
@@ -19,7 +20,7 @@
 		"reflect-metadata": "^0.1.12",
 		"require-context": "^1.1.0",
 		"shortid": "^2.2.8",
-		"typegoose": "^5.1.0",
+		"typegoose": "https://github.com/mattjennings/typegoose",
 		"typescript": "^2.8.3"
 	},
 	"devDependencies": {

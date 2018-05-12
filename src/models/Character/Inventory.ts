@@ -6,4 +6,4 @@ export class Inventory extends Typegoose {
   @prop() public maxSlots: number[]
 }
 
-export default new Inventory().getModelForClass(Inventory)
+export default new Inventory().getModelForClass(Inventory, { existingMongoose: mongoose })
