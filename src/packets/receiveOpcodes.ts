@@ -94,7 +94,7 @@ export enum ReceiveOpcode {
   PICK_ALL_CHAR = 0x0e,
   PLAYER_DC = 0x0c,
   PLAYER_INTERACTION = 0x7b,
-  PLAYER_LOGGEDIN = 0x14,
+  PLAYER_LOGGED_IN = 0x14,
   PLAYER_UPDATE = 0xdf,
   POISON_BOMB = 0x6d,
   PONG = 0x18,

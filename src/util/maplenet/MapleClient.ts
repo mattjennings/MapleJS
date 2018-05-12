@@ -2,6 +2,9 @@ import * as net from 'net'
 import MapleServer from './MapleServer'
 import { mapleCrypto, PacketWriter } from '@util/maplenet'
 import { Account } from '@models/Account'
+import { Character } from '@models/Character'
+import MovableLife from '@packets/MovableLife'
+
 import { InstanceType } from 'typegoose'
 import { getWorldInfoById, ipStringToBytes } from '@util/helpers'
 
@@ -10,10 +13,15 @@ export default class MapleClient {
   public socket: net.Socket
 
   public account?: InstanceType<Account>
+  public character?: InstanceType<Character>
+
+  public location?: MovableLife
   public state?: {
     worldId: number
     channelId: number
   }
+  public portalCount?: number
+  public lastTickCount?: number
 
   constructor(server: MapleServer, socket: net.Socket) {
     this.server = server
@@ -52,7 +60,7 @@ export default class MapleClient {
     // Remote-hack vulnerable
     const packet = new PacketWriter(0x000c)
     packet.writeUInt16(0)
-    packet.writeBytes(ipStringToBytes(world.publicIP))
+    packet.writeBytes(ipStringToBytes(world.ip))
     packet.writeUInt16(world.portStart + this.state.channelId)
     packet.writeUInt32(characterId)
     packet.writeUInt8(0) // Flag bit 1 set = korean popup?

@@ -1,6 +1,6 @@
 import nxFiles, { NxManager } from '@nxFiles'
 
-export default class MapManager extends NxManager {
+class MapManager extends NxManager {
   private maps: { [key: string]: any } = {}
 
   public getMapNodePath(mapId) {
@@ -48,3 +48,5 @@ export default class MapManager extends NxManager {
     return node
   }
 }
+
+export default new MapManager()

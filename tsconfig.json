@@ -23,6 +23,9 @@
       "@packets": [
         "src/packets/index.ts"
       ],
+      "@packets/*": [
+        "src/packets/*"
+      ],
       "@db": [
         "src/db/index.ts"
       ],

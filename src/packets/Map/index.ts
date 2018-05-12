@@ -1,5 +1,6 @@
-import { PacketWriter } from '@util/maplenet'
-import { MapleClient } from '@servers/MapleServer'
+import { PacketWriter, MapleClient } from '@util/maplenet'
+import { BitSet32 } from '@packets'
+import MapManager from './MapManager'
 
 export enum PortalBlockedErrors {
   CLOSED_FOR_NOW = 1,
@@ -146,7 +147,7 @@ export const getPortalErrorPacket = error => {
 }
 
 export const changeMap = (client, map, spawnPoint) => {
-  const newMap = getMap(map)
+  const newMap = MapManager.getMap(map)
   if (newMap === null) {
     return false
   }
@@ -155,7 +156,7 @@ export const changeMap = (client, map, spawnPoint) => {
   const character = client.character
 
   // Remove player from old map
-  getMap(character.mapId).removeClient(client)
+  MapManager.getMap(character.mapId).removeClient(client)
 
   client.portalCount++
   character.mapId = map
@@ -165,7 +166,7 @@ export const changeMap = (client, map, spawnPoint) => {
   const packet = new PacketWriter(0x007d)
   packet.writeUInt32(client.server.channelId)
   packet.writeUInt8(client.portalCount) // Portal count
-  packet.writeUInt8(false)
+  packet.writeUInt8(0)
   packet.writeUInt16(0)
 
   packet.writeUInt8(0)

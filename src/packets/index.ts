@@ -16,3 +16,4 @@ export const getOpcodeName = (opCode: Opcode) => {
 }
 
 export { ReceiveOpcode, SendOpcode }
+export { default as BitSet32 } from './BitSet32'
