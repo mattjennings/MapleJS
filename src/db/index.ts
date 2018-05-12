@@ -5,5 +5,4 @@ const serverConfig = require('@config/server')
 mongoose.connect(serverConfig.databaseConnectionString)
 autoIncrement.initialize(mongoose.connection)
 
-// export const AutoIncrementPlugin = require('mongoose-sequence')(mongoose)
 export default mongoose

@@ -1,3 +1,5 @@
+require('@db')
+
 import packetHandlerManager from './packetHandlerManager'
 import MapleServer from '../MapleServer'
 
