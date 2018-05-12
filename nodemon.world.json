@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": "ts",
+  "ignore": ["src/**/*.spec.ts", "src/servers/LoginServer/**/*.*"],
+  "exec": "ts-node -r tsconfig-paths/register src/scripts/start-worlds.ts"
+}

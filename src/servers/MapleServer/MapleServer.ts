@@ -16,9 +16,19 @@ declare module 'net' {
   }
 }
 
-class MapleServer {
+export interface MapleServerOptions {
+  name: string
+  ip: string
+  port: number
+  version: number
+  subversion: string
+  locale: number
+}
+
+export default class MapleServer {
   public name: string
   public port: number
+  public ip: string
   public version: number
   public subversion: string
   public locale: number
@@ -28,9 +38,10 @@ class MapleServer {
   public tcpServer: any
   public pingerId: NodeJS.Timer
 
-  constructor(packetHandlerManager: PacketHandlerManager, options) {
+  constructor(packetHandlerManager: PacketHandlerManager, options: MapleServerOptions) {
     this.name = options.name
     this.port = options.port
+    this.ip = options.ip
     this.version = options.version
     this.subversion = options.subversion
     this.locale = options.locale
@@ -40,16 +51,14 @@ class MapleServer {
 
     this.tcpServer = this.createTcpServer()
 
-    console.log('Starting pinger')
-
     packetHandlerManager.setHandler(
       new PacketHandler(0x0018, client => {
         client.socket.ponged = true
       })
     )
 
-    this.tcpServer.listen(this.port)
-    console.log('Waiting for people on port ' + this.port + '...')
+    this.tcpServer.listen(this.port, this.ip)
+    console.log(`${this.name} listening on  ${this.ip}:${this.port}`)
   }
 
   public createTcpServer() {
@@ -164,5 +173,3 @@ class MapleServer {
     }
   }
 }
-
-export default MapleServer

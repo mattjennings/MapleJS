@@ -28,7 +28,7 @@ Copy `config/server.sample.json` and rename it to `config/server.json`. Modify i
 
 Start a mongodb server and make sure the connection string in `config/server.json` is correct (if you prefer docker, there is a docker-compose.yml file you can use)
 
-Start the server
+Start the servers
 
 ```
 yarn start

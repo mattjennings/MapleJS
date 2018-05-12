@@ -1,3 +1,4 @@
-import MapleServer from './MapleServer'
+import MapleServer, { MapleServerOptions } from './MapleServer'
 
+export { MapleServerOptions }
 export default MapleServer

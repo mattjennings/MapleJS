@@ -3,22 +3,18 @@
 	"subversion": "1",
 	"locale": 8,
 	"enableAutoregister": true,
-	"databaseConnectionString": "mongodb://127.0.0.1/maplejs",
-	"loginservers": [
-		{
-			"privateIP": "127.0.0.1",
-			"publicIP": "127.0.0.1",
+	"databaseConnectionString": "mongodb://localhost/maplejs",
+	"loginServer": {
+			"ip": "0.0.0.0",
 			"port": 8484
-		}
-	],
+	},
 	"worlds": {
-		"Scania": {
-			"privateIP": "127.0.0.1",
-			"publicIP": "127.0.0.1",
+		"scania": {
+			"ip": "127.0.0.1",
 			"portStart": 8500,
+			"channels": 1,
 			"id": 0,
 			"ribbon": 2,
-			"channels": 1,
 			"eventMessage": "",
 			"dialogs": [
 			],
