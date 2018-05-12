@@ -44,3 +44,4 @@ FEATURES
 TODO
 ========
 - Channel server
+- convert nx-parser to typescript

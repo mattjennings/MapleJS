@@ -1,7 +1,7 @@
 import WorldServer from '../servers/WorldServer'
 import * as child_process from 'child_process'
 import { forEach } from 'lodash'
-import { MapleServerOptions } from '../servers/MapleServer'
+import { MapleServerOptions } from '@util/maplenet/MapleServer'
 
 const serverConfig = require('@config/server')
 const { worlds } = serverConfig

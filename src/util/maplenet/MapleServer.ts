@@ -1,8 +1,8 @@
 import * as crypto from 'crypto'
 import * as net from 'net'
 import { findIndex } from 'lodash'
-import { mapleSocket, PacketWriter, PacketReader, PacketHandlerManager, PacketHandler } from '@util/maplenet'
-import Client from './Client'
+import { mapleCrypto, PacketWriter, PacketReader, PacketHandlerManager, PacketHandler } from '@util/maplenet'
+import MapleClient from './MapleClient'
 import { getOpcodeName, ReceiveOpcode } from '@packets'
 
 declare module 'net' {
@@ -34,7 +34,7 @@ export default class MapleServer {
   public locale: number
   public packetHandlerManager: PacketHandlerManager
 
-  public connectedClients: Client[]
+  public connectedClients: MapleClient[]
   public tcpServer: any
   public pingerId: NodeJS.Timer
 
@@ -70,7 +70,7 @@ export default class MapleServer {
       socket.nextBlockLen = 4
       socket.buffer = new Buffer(0)
 
-      const client = new Client(this, socket)
+      const client = new MapleClient(this, socket)
       this.connectedClients.push(client)
 
       console.log('Got connection!')
@@ -89,12 +89,12 @@ export default class MapleServer {
           data.copy(socket.buffer, 0, block.length)
 
           if (socket.header) {
-            socket.nextBlockLen = mapleSocket.getLengthFromHeader(block)
+            socket.nextBlockLen = mapleCrypto.getLengthFromHeader(block)
           } else {
             socket.nextBlockLen = 4
 
-            mapleSocket.decryptData(block, socket.clientSequence)
-            socket.clientSequence = mapleSocket.morphSequence(socket.clientSequence)
+            mapleCrypto.decryptData(block, socket.clientSequence)
+            socket.clientSequence = mapleCrypto.morphSequence(socket.clientSequence)
 
             const reader = new PacketReader(block)
             const opCode = reader.readUInt16()

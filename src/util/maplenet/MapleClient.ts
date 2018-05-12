@@ -1,11 +1,11 @@
 import * as net from 'net'
 import MapleServer from './MapleServer'
-import { mapleSocket, PacketWriter } from '@util/maplenet'
+import { mapleCrypto, PacketWriter } from '@util/maplenet'
 import { Account } from '@models/Account'
 import { InstanceType } from 'typegoose'
 import { getWorldInfoById, ipStringToBytes } from '@util/helpers'
 
-class Client {
+export default class MapleClient {
   public server: MapleServer
   public socket: net.Socket
 
@@ -23,13 +23,13 @@ class Client {
   public sendPacket(packet) {
     let buffer = new Buffer(4)
     const socket = this.socket
-    mapleSocket.generateHeader(buffer, socket.serverSequence, packet.writtenData, -(this.server.version + 1))
+    mapleCrypto.generateHeader(buffer, socket.serverSequence, packet.writtenData, -(this.server.version + 1))
     socket.write(buffer)
 
     buffer = packet.getBufferCopy()
-    mapleSocket.encryptData(buffer, socket.serverSequence)
+    mapleCrypto.encryptData(buffer, socket.serverSequence)
 
-    socket.serverSequence = mapleSocket.morphSequence(socket.serverSequence)
+    socket.serverSequence = mapleCrypto.morphSequence(socket.serverSequence)
 
     socket.write(buffer)
   }
@@ -60,7 +60,4 @@ class Client {
 
     this.sendPacket(packet)
   }
-
 }
-
-export default Client

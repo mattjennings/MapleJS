@@ -12,3 +12,18 @@ export default {
   reactor: new nx.file(path.resolve(__dirname, '..', '..', 'nx', 'Reactor.nx')),
   etc: new nx.file(path.resolve(__dirname, '..', '..', 'nx', 'Etc.nx'))
 }
+
+export class NxManager {
+  public addPadding(side: 'left' | 'right', value, length, paddingCharacter: string = '0') {
+    paddingCharacter = paddingCharacter
+    value = value.toString()
+    for (let i = value.length; i < length; i++) {
+      if (side === 'left') {
+        value = paddingCharacter + value
+      } else {
+        value += paddingCharacter
+      }
+    }
+    return value
+  }
+}

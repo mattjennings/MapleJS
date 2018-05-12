@@ -1,4 +1,4 @@
-import Client from '../../servers/MapleServer/Client'
+import MapleClient from './MapleClient'
 import { PacketReader } from '@util/maplenet'
 import PacketHandler from './PacketHandler'
 import { getOpcodeName, Opcode } from '@packets'
@@ -24,12 +24,14 @@ class PacketHandlerManager {
   public setHandlersByFiles(path: string, subdirectories: boolean = true, regex: RegExp = /.ts$/) {
     const requires = requireContext(path, subdirectories, regex)
     requires.keys().forEach(file => {
-      const handler: PacketHandler = requires(file).default
-      this.setHandler(handler)
+      if (file) {
+        const handler: PacketHandler = requires(file).default
+        this.setHandler(handler)
+      }
     })
   }
 
-  public async runHandler(opcode: Opcode, client: Client, reader: PacketReader) {
+  public async runHandler(opcode: Opcode, client: MapleClient, reader: PacketReader) {
     const handler = this.getHandler(opcode)
     if (handler) {
       try {

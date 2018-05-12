@@ -1,13 +1,13 @@
-import Client from '../../servers/MapleServer/Client'
+import MapleClient from './MapleClient'
 import { PacketReader } from '@util/maplenet'
 import { Opcode } from '@packets'
 import { getOpcodeName, ReceiveOpcode } from '@packets'
 
 class PacketHandler {
   public opcode: Opcode
-  public callback: (client: Client, reader: PacketReader) => void
+  public callback: (client: MapleClient, reader: PacketReader) => void
 
-  constructor(opcode: Opcode, callback: (client: Client, reader: PacketReader) => void) {
+  constructor(opcode: Opcode, callback: (client: MapleClient, reader: PacketReader) => void) {
     this.opcode = opcode
     this.callback = callback
   }
