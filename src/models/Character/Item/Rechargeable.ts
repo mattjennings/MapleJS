@@ -3,8 +3,9 @@ import { prop, Typegoose, ModelType, InstanceType, Ref, instanceMethod } from 't
 import { Item } from './Item'
 import { PacketWriter } from '@util/maplenet'
 
-export class Rechargeable extends Item implements Item {
-  @prop() public type: number = 2
+export class Rechargeable extends Item {
+  @prop({ default: 2 })
+  public type: number
   @prop() public name: string
   @prop() public amount: number
   @prop() public flags: number

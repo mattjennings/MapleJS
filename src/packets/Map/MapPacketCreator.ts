@@ -55,6 +55,7 @@ export const getEnterMapPacket = client => {
 
   {
     for (i = 0; i < 3; i++) {
+      /*
       if (false) {
         packet.writeUInt8(1)
         packet.writeUInt32(0) // Pet Item ID
@@ -67,6 +68,7 @@ export const getEnterMapPacket = client => {
         packet.writeUInt8(0) // Name tag
         packet.writeUInt8(0) // Quote item
       }
+      */
     }
     // Pets block
     packet.writeUInt8(0)
@@ -77,6 +79,7 @@ export const getEnterMapPacket = client => {
   packet.writeUInt32(0) // Taming mob Fatigue
 
   packet.writeUInt8(0)
+  /*
   if (false) {
     // Miniroom
     packet.writeUInt32(0)
@@ -87,38 +90,47 @@ export const getEnterMapPacket = client => {
     packet.writeUInt8(0)
     packet.writeUInt8(0)
   }
-
+  */
   packet.writeUInt8(0)
+  /*
   if (false) {
     // Chalkboard
     packet.writeString('')
   }
-
+  */
   packet.writeUInt8(0)
+  /*
   if (false) {
     // Couple ring
     packet.writeUInt64(0)
     packet.writeUInt64(0)
     packet.writeUInt32(0)
   }
+  */
 
   packet.writeUInt8(0)
+
+  /*
   if (false) {
     // Friend ring
     packet.writeUInt64(0)
     packet.writeUInt64(0)
     packet.writeUInt32(0)
   }
-
+  */
   packet.writeUInt8(0)
+
+  /*
   if (false) {
     // Marriage ring
     packet.writeUInt32(0)
     packet.writeUInt32(0)
     packet.writeUInt32(0)
   }
-
+  */
   packet.writeUInt8(0)
+
+  /*
   if (false) {
     const amount = 0
     packet.writeUInt32(amount)
@@ -126,6 +138,7 @@ export const getEnterMapPacket = client => {
       packet.writeUInt32(0) // OnNewYearRecordAdd ?
     }
   }
+  */
 
   packet.writeUInt8(0) // Beserk?
   packet.writeUInt8(0) // Unknown
@@ -152,7 +165,6 @@ export const changeMap = (client, map, spawnPoint) => {
     return false
   }
 
-  // Helper function for changing map.
   const character = client.character
 
   // Remove player from old map

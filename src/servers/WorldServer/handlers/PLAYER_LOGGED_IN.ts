@@ -4,12 +4,22 @@ import CharacterModel from '@models/Character'
 import SkillModel from '@models/Character/Skill/Skill'
 import MapManager from '@packets/Map/MapManager'
 import MovableLife from '@packets/MovableLife'
-import { ReceiveOpcode } from '@packets'
+import { ReceiveOpcode, SendOpcode } from '@packets'
 import { Item } from '@models/Character/Item'
 import { InstanceType } from 'typegoose'
 
 const Int64 = require('int64-native')
 
+/*
+diamondo packet lengths
+
+Before stats: 31
+After stats: 124
+Before inventory: 126
+After inventory: 155
+Before skills: 155
+After skills: 159
+*/
 export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, reader) => {
   if (client.character) {
     client.disconnect('Trying to load while already loaded.')
@@ -58,8 +68,8 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
 
   // Send data to player
 
-  const packet = new PacketWriter(0x007d)
-  packet.writeUInt32(client.state.channelId)
+  const packet = new PacketWriter(SendOpcode.WARP_TO_MAP)
+  packet.writeUInt32(client.server.channelId)
   packet.writeUInt8(client.portalCount) // Portal count
   packet.writeUInt8(1)
   packet.writeUInt16(0)
@@ -72,13 +82,18 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
   packet.writeBytes([0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff])
   packet.writeUInt8(0)
 
+  console.log('Before stats: ' + packet.getBufferCopy().length)
   character.addStats(packet)
+  console.log('After stats: ' + packet.getBufferCopy().length)
 
   packet.writeUInt8(20) // Buddylist size
   packet.writeUInt8(0) // Blessing of the Fairy name
 
   let item: InstanceType<Item>
-  let j, i
+  let j
+  let i
+  console.log('Before inventory: ' + packet.getBufferCopy().length)
+
   {
     // Inventory
     packet.writeUInt32(character.inventory.mesos)
@@ -150,6 +165,9 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
       packet.writeUInt8(0)
     }
   }
+  console.log('after inventory: ' + packet.getBufferCopy().length)
+
+  console.log('Before skills: ' + packet.getBufferCopy().length)
 
   {
     // Skills
@@ -175,6 +193,8 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
 
     packet.writeUInt16(0) // Cooldowns
   }
+  console.log('after skills: ' + packet.getBufferCopy().length)
+
 
   {
     // Quests
@@ -211,6 +231,7 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
 
   packet.writeDate(new Date()) // Current time
 
+  // diamondo has length of 252?
   client.sendPacket(packet)
 
   map.addClient(client)

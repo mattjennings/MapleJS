@@ -1,12 +1,14 @@
-import nxFiles, { NxManager } from '@nxFiles'
+import nxFiles from '@nxFiles'
+import { addPadding } from '@util/nx-parser'
+import Map from './Map'
 
-class MapManager extends NxManager {
+class MapManager {
   private maps: { [key: string]: any } = {}
 
   public getMapNodePath(mapId) {
     mapId = parseInt(mapId, 10)
     const category = Math.floor(mapId / 100000000)
-    const maname = this.addPadding('left', mapId, 9) + '.img'
+    const maname = addPadding('left', mapId, 9) + '.img'
     return nxFiles.map.getPath('Map/Map' + category + '/' + maname)
   }
 

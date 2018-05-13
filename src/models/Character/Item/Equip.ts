@@ -2,9 +2,11 @@ import * as mongoose from 'mongoose'
 import { prop, Typegoose, ModelType, InstanceType, Ref, instanceMethod } from 'typegoose'
 import { Item } from './Item'
 import { PacketWriter } from '@util/maplenet'
+require('mongoose-schema-extend')
 
-export class Equip extends Item implements Item {
-  @prop() public type: number = 1
+export class Equip extends Item {
+  @prop({ default: 1 })
+  public type: number
   @prop() public slots: number
   @prop() public scrolls: number
   @prop() public incStr: number

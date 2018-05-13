@@ -1,11 +1,12 @@
 import CharacterModel, { Character } from '@models/Character'
-import Equip from '@models/Character/Item/Equip'
-import Rechargeable from '@models/Character/Item/Rechargeable'
+import EquipModel from '@models/Character/Item/Equip'
+import RechargeableModel from '@models/Character/Item/Rechargeable'
 import nxFiles from '@nxFiles'
 import { ReceiveOpcode } from '@packets'
 import { PacketHandler, PacketWriter } from '@util/maplenet'
 import { InstanceType } from 'typegoose'
 import { generate } from 'shortid'
+import { Item } from '@models/Character/Item'
 
 export default new PacketHandler(ReceiveOpcode.CREATE_CHAR, async (client, reader) => {
   if (!client.account || !client.state) {
@@ -131,18 +132,20 @@ export default new PacketHandler(ReceiveOpcode.CREATE_CHAR, async (client, reade
   client.sendPacket(packet)
 })
 
-async function createItem(character: InstanceType<Character>, pItemId, pSlot, pInventory) {
-  let item
-  if (pInventory === 1) {
-    item = new Equip()
-  } else {
-    item = new Rechargeable()
-    item.amount = 1
+async function createItem(character: InstanceType<Character>, itemId, slot, inventory) {
+  let item: InstanceType<Item>
+  const commonProps = {
+    character: character._id,
+    inventory,
+    slot,
+    itemId
   }
-  item.character = character._id
-  item.inventory = pInventory
-  item.slot = pSlot
-  item.itemId = pItemId
+  if (inventory === 1) {
+    item = new EquipModel({ ...commonProps })
+  } else {
+    item = new RechargeableModel({ ...commonProps, amount: 1 })
+  }
+
   await item.save()
 }
 function checkItemValidity(job, female, element, objectId) {

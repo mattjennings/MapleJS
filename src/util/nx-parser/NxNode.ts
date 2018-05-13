@@ -4,7 +4,7 @@ import NxFile from './NxFile'
 export default class NxNode {
   public file: NxFile
   public nameIdMap: any
-  public children: any
+  public children: NxNode[]
   public name_id: number
   public first_child_id: number
   public child_count: number
@@ -16,12 +16,13 @@ export default class NxNode {
     this.nameIdMap = {} // name-id map
     this.children = null
 
-    if (index) {
+    if (index !== undefined) {
       const nodeOffset = file.header.node_offset + index * 20
       const buffer = file.readFilePartially(nodeOffset, 20)
       this.initFromBuffer(buffer, 0)
     }
   }
+
   public initFromBuffer(pBuffer, pOffset) {
     this.name_id = pBuffer.readUInt32LE(pOffset)
     pOffset += 4
@@ -93,18 +94,18 @@ export default class NxNode {
     return this.children[pId]
   }
 
-  public child(pName) {
+  public child(name): NxNode | null {
     this.initializeChildren() // Lazy Load
 
-    if (this.children !== null && this.nameIdMap.hasOwnProperty(pName)) {
-      return this.children[this.nameIdMap[pName]]
+    if (this.children !== null && this.nameIdMap.hasOwnProperty(name)) {
+      return this.children[this.nameIdMap[name]]
     }
     return null
   }
 
-  public forEach(pCallback) {
+  public forEach(callback: (node: NxNode) => boolean | void) {
     for (let i = 0; i < this.child_count; i++) {
-      const returnCode = pCallback(this.childById(i))
+      const returnCode = callback(this.childById(i))
       if (returnCode === false) {
         break
       }
@@ -122,10 +123,10 @@ export default class NxNode {
     // Searches for the specified path. For example, 'Tips.img/all/0' will go into Tips.img first, then all, then 0
     // Returns null if any of the nodes were not found
     const elements = pPath.split('/')
-    let currentNode = this
+    let currentNode
 
     for (let i = 0; i < elements.length; i++) {
-      const nextNode = currentNode.child(elements[i])
+      const nextNode = (currentNode || this).child(elements[i])
       if (nextNode === null) {
         return null
       }
@@ -133,6 +134,6 @@ export default class NxNode {
       currentNode = nextNode
     }
 
-    return currentNode
+    return currentNode || this
   }
 }
