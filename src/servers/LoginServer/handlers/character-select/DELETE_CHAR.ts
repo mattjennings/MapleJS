@@ -12,7 +12,7 @@ export default new PacketHandler(ReceiveOpcode.DELETE_CHAR, async (client, reade
   const pic = reader.readString()
 
   const id = reader.readUInt32()
-  const character = await CharacterModel.findOne({ id, worldId: client.state.worldId })
+  const character = await CharacterModel.findOne({ _id: id, worldId: client.state.worldId })
   const characterAccount: InstanceType<Account> = client.account
 
   if (!character) {
