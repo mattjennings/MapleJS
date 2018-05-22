@@ -28,7 +28,11 @@ const spawnInstance = (options: WorldServerOptions) => {
       '--subversion',
       options.subversion,
       '--locale',
-      options.locale.toString()
+      options.locale.toString(),
+      '--worldId',
+      options.worldId.toString(),
+      '--channelId',
+      options.channelId.toString()
     ],
     {
       cwd: __dirname,
@@ -52,10 +56,9 @@ const spawnInstance = (options: WorldServerOptions) => {
     const lines = data.split('\n')
 
     lines.forEach(pLine => {
-      if (pLine === '') {
-        return
+      if (pLine) {
+        console.log('[' + options.name + '][ERROR] ' + pLine)
       }
-      console.log('[' + options.name + '][ERROR] ' + pLine)
     })
   })
 
