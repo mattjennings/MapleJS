@@ -28,7 +28,7 @@
 		"shortid": "^2.2.8",
 		"ts-node": "^6.0.3",
 		"tsconfig-paths": "^3.3.2",
-		"typegoose": "https://github.com/mattjennings/typegoose#6e75ae160a02a2470b0b21d03257f6e62c9536ba",
+		"typegoose": "https://github.com/mattjennings/typegoose#c83bd69",
 		"typescript": "^2.8.3"
 	},
 	"devDependencies": {

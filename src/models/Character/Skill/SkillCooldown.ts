@@ -4,7 +4,7 @@ import { PacketWriter } from '@util/maplenet'
 import { Character } from '@models/Character'
 
 export class SkillCooldown extends Typegoose {
-  @prop({ ref: Character, refType: mongoose.Schema.Types.Number, index: true })
+  @prop({ ref: Character, refType: 'number', index: true })
   public characterId: number
 
   @prop({ index: true })

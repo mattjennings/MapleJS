@@ -984,6 +984,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
+harmony-reflect@^1.4.2:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/harmony-reflect/-/harmony-reflect-1.6.0.tgz#9c28a77386ec225f7b5d370f9861ba09c4eea58f"
+
 has-ansi@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/has-ansi/-/has-ansi-0.1.0.tgz#84f265aae8c0e6a88a12d7022894b7568894c62e"
@@ -1506,6 +1510,13 @@ mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
 
+mongoose-schema-extend@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/mongoose-schema-extend/-/mongoose-schema-extend-0.2.2.tgz#f63dd313c422a3871f5569e36b0d28ca1a224631"
+  dependencies:
+    harmony-reflect "^1.4.2"
+    owl-deepcopy "~0.0.1"
+
 mongoose-sequence@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/mongoose-sequence/-/mongoose-sequence-4.0.1.tgz#831ddd66ef96abf008a89413ea6d25837dfacc55"
@@ -1729,6 +1740,10 @@ osenv@^0.1.4:
   dependencies:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
+
+owl-deepcopy@~0.0.1:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/owl-deepcopy/-/owl-deepcopy-0.0.6.tgz#e61c6934af0a38c255be95e5c7ee3fa8facaace3"
 
 p-finally@^1.0.0:
   version "1.0.0"
@@ -2429,12 +2444,13 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-"typegoose@https://github.com/mattjennings/typegoose#6e75ae160a02a2470b0b21d03257f6e62c9536ba":
+"typegoose@https://github.com/mattjennings/typegoose#c83bd69":
   version "5.2.1"
-  resolved "https://github.com/mattjennings/typegoose#6e75ae160a02a2470b0b21d03257f6e62c9536ba"
+  resolved "https://github.com/mattjennings/typegoose#c83bd6992b300746a9a2db6c582c89cbae4fb3c9"
   dependencies:
     "@types/mongoose" "5.0.10"
     lodash "4.17.10"
+    mongoose-schema-extend "^0.2.2"
 
 typescript-eslint-parser@^11.0.0:
   version "11.0.0"
