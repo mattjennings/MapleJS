@@ -82,9 +82,7 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
   packet.writeBytes([0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff])
   packet.writeUInt8(0)
 
-  console.log('Before stats: ' + packet.getBufferCopy().length)
   character.addStats(packet)
-  console.log('After stats: ' + packet.getBufferCopy().length)
 
   packet.writeUInt8(20) // Buddylist size
   packet.writeUInt8(0) // Blessing of the Fairy name
@@ -92,7 +90,6 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
   let item: InstanceType<Item>
   let j
   let i
-  console.log('Before inventory: ' + packet.getBufferCopy().length)
 
   {
     // Inventory
@@ -165,14 +162,10 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
       packet.writeUInt8(0)
     }
   }
-  console.log('after inventory: ' + packet.getBufferCopy().length)
-
-  console.log('Before skills: ' + packet.getBufferCopy().length)
 
   {
     // Skills
     const skills = await SkillModel.find({ characterId: character })
-    console.log('skills found', skills)
     packet.writeUInt16(skills.length) // Unlocked
     for (i = 0; i < skills.length; i++) {
       const skill = skills[i]
@@ -193,8 +186,6 @@ export default new PacketHandler(ReceiveOpcode.PLAYER_LOGGED_IN, async (client, 
 
     packet.writeUInt16(0) // Cooldowns
   }
-  console.log('after skills: ' + packet.getBufferCopy().length)
-
 
   {
     // Quests
