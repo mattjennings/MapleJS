@@ -83,6 +83,5 @@ export class Equip extends Item {
 
 export default new Equip().getModelForClass(Equip, {
   schemaOptions: { collection: 'items', discriminatorKey: '_type' },
-  existingMongoose: mongoose,
-  mongooseSchemaExtend: true
+  existingMongoose: mongoose
 })

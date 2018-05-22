@@ -37,6 +37,5 @@ export class Rechargeable extends Item {
 
 export default new Rechargeable().getModelForClass(Rechargeable, {
   schemaOptions: { collection: 'items', discriminatorKey: '_type' },
-  existingMongoose: mongoose,
-  mongooseSchemaExtend: true
+  existingMongoose: mongoose
 })

@@ -12,6 +12,5 @@ export class Pet extends Item implements Item {
 
 export default new Pet().getModelForClass(Pet, {
   schemaOptions: { collection: 'items', discriminatorKey: '_type' },
-  existingMongoose: mongoose,
-  mongooseSchemaExtend: true
+  existingMongoose: mongoose
 })
